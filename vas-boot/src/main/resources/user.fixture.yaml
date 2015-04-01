@@ -1,0 +1,7 @@
+- !!org.vas.domain.repository.User
+    password: root
+    username: root
+
+- !!org.vas.domain.repository.User
+    password: vincent
+    username: vincent

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="1238" started-at="2015-03-27T14:38:28Z" finished-at="2015-03-27T14:38:29Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="1238" started-at="2015-03-27T14:38:28Z" finished-at="2015-03-27T14:38:29Z">
+      <class name="org.vas.http.resource.test.HttpEndpointTest">
+        <test-method status="PASS" signature="itShouldMakeGetRequest()[pri:0, instance:org.vas.http.resource.test.HttpEndpointTest@4f4a7090]" name="itShouldMakeGetRequest" duration-ms="1222" started-at="2015-03-27T15:38:28Z" finished-at="2015-03-27T15:38:29Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- itShouldMakeGetRequest -->
+      </class> <!-- org.vas.http.resource.test.HttpEndpointTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
