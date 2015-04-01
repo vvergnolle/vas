@@ -4,7 +4,7 @@ import org.vas.http.resource.HttpResponse;
 import org.vas.http.resource.annotation.HttpEndpoint;
 import org.vas.http.resource.annotation.HttpResource;
 
-@HttpEndpoint("http://opendata.paris.fr/api/records/1.0/search?dataset=stations-velib-disponibilites-en-temps-reel&")
+@HttpEndpoint("http://opendata.paris.fr/api/records/1.0/search?dataset=stations_et_espaces_autolib_de_la_metropole_parisienne&")
 public interface AutolibOpendataParisWs {
 
 	@HttpResource(uri="geofilter.distance=%f,%f,%d")
