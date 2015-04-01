@@ -3,7 +3,7 @@
 The primary goal is to offer a simple way to keep a list of addresses (with latitude and longitude) and then search for stations around 
 the one that you select.
 
-This is a school project which mean **Velib and Autolib Stations** and can be translated just as is in French by **going**.
+This is a school project that mean **Velib and Autolib Stations** and can be translated just as is in French by **going**.
 
 ###Technologies
 
