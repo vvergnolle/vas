@@ -17,15 +17,15 @@ This projet was built using :
 
 **Security:**
 
-The security layer of the application is based on the Undertow AuthenticationMechanism class which integrate seemless with Servlet api and so with Jaxrs.
+The security layer of the application is based on the Undertow AuthenticationMechanism class.
 
 **REST:**
 
-The REST layer is handled by Jaxrs and more precisly by Apache Wink.
+The REST layer is handled by Jaxrs (vas-jaxrs) and more precisly by Apache Wink.
 
 **ORM:**
 
-The database layer is handled by OrmLite.
+The database layer is handled by OrmLite (vas-domain-repository).
 
 **Domain:**
 
@@ -56,6 +56,34 @@ Annotation driven HTTP request. (Only GET support)
 
 *Other projects descriptions coming soon.*
 
+**vas-inject**:
+
+Provide dependency injection.
+
+**vas-jaxrs-address**:
+
+Restful endpoint for addresses.
+
+**vas-jaxrs-stations-around**:
+
+Restful endpoint for stations around an address.
+
+**vas-jaxrs**:
+
+Rest support via JAXRS (Apache Wink).
+
+**vas-opendata-paris-client**:
+
+Provide interfaces (use vas-http-resource) in order to call the Opendata web services.
+
+**vas-opendata-paris-proxy**:
+
+Define a simple proxy (debug) and a caching system for the Opendata web services responses.
+
+**vas-server**:
+
+Define debug endpoints.
+
 ###Build & Run
 
 To build the project
@@ -66,42 +94,68 @@ Then, run the application with
 
 > java -Dvas.conf=vas-boot/vas.conf -jar vas-boot/target/vas-boot.jar
 
-
-###Login
+##Login
 
 The login mechanism use HTTP Basic.
 
-###Application urls
+In order to login, just pass a valid HTTP Basic digest to the server at any resources.
 
-/vas/rest/address : Address CRUD
-/vas/admin/jaxrs : Apache Wink AdminServlet
-/admin/logs : Logback logs
+##Cors
 
-###Database
+Since the 0.2-SNAPSHOT version the server is CORS compliant.
 
-The application use h2 as the primary database engine. You can override by passing a new configuration file to the command line:
+You can consume the VAS web services even if you aren't on the same domain.
+
+*Currently the support is very basic, you can't whilelist servers.*
+
+###Debug urls
+
+**/vas/admin/jaxrs** : Apache Wink AdminServlet
+
+*(Enabled only if the vas.admin.jaxrs application property is set to true)*
+
+**/admin/logs** : Display logs
+
+*(Enabled only if the vas.admin.logs application property is set to true)*
+
+##Applications urls
+
+**/vas/rest/address** : Address resource
+
+**/vas/rest/stations/around/{address id}** : Stations around resource
+
+**/vas/rest/users/infos** : Users infos resources (logged user informations)
+
+##Database
+
+The application use h2 as the primary database engine (check vas-boot/vas.conf file). You can override this by passing a new configuration file as a JVM parameter:
 
 > java -Dvas.conf=<path/to/your/conf> -jar vas-boot/target/vas-boot.jar
 
-*H2 choice was made because of the POC nature of this project*
+### Application configuration file (vas.conf)
 
-###vas.conf file
+#### Database
 
-##### Db
-vas.db.url=<jdbc url>
-vas.db.user=<user>
-vas.db.pwd=<password>
+> vas.db.url=jdbc url
 
-##### Admin
-vas.admin.logs=true|false
-vas.admin.jaxrs=true|false
+> vas.db.user=user
 
-##### Default stuff
-vas.user.logout.default=true|false
+> vas.db.pwd=password
+
+#### Admin
+
+> vas.admin.logs=true|false
+
+> vas.admin.jaxrs=true|false
+
+#### Logout
+
+> vas.user.logout.default=true|false
 
 ###Links
 
-Undertow: http://undertow.io
-Apache Wink: https://wink.apache.org
-Opendata paris: http://opendata.paris.fr
+**Undertow**: http://undertow.io
 
+**Apache Wink**: https://wink.apache.org
+
+**Opendata paris**: http://opendata.paris.fr
