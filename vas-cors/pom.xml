@@ -6,28 +6,12 @@
     <artifactId>vas</artifactId>
     <version>0.2-SNAPSHOT</version>
   </parent>
-  <artifactId>vas-opendata-paris-proxy</artifactId>
+  <artifactId>vas-cors</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>io.undertow</groupId>
-      <artifactId>undertow-core</artifactId>
-      <version>${version.undertow}</version>
-    </dependency>
-
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>vas-commons</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>vas-inject</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>vas-opendata-paris-client</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

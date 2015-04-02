@@ -9,12 +9,16 @@ import io.undertow.security.idm.PasswordCredential;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderValues;
 import io.undertow.util.Headers;
+import io.undertow.util.StatusCodes;
 
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vas.domain.repository.User;
 import org.vas.domain.repository.UserRepository;
 
 /**
@@ -22,12 +26,17 @@ import org.vas.domain.repository.UserRepository;
  * 
  */
 public class RestAuthenticationMechanism implements AuthenticationMechanism {
-
+	
+	protected static final Set<String> ANONYMOUS_ROLES = new HashSet<>();
+	static {
+		ANONYMOUS_ROLES.add(User.ANONYMOUS);
+	}
+	
 	protected static final String MECHANISM_NAME = "REST-AUTH-MECHANISM";
 
 	private static final String COLON = ":";
 	private static final String BASIC = "Basic ";
-	private static final ChallengeResult CHALLENGE_RESULT = new ChallengeResult(true, 401);
+	private static final ChallengeResult CHALLENGE_RESULT = new ChallengeResult(true, StatusCodes.UNAUTHORIZED);
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected final UserRepository repository;
@@ -45,30 +54,20 @@ public class RestAuthenticationMechanism implements AuthenticationMechanism {
 	@Override
 	public AuthenticationMechanismOutcome authenticate(HttpServerExchange exchange, SecurityContext securityContext) {
 		Account account = securityContext.getAuthenticatedAccount();
+		if(account != null) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("User {} already logged in - nothing to do", account.getPrincipal().getName());
+			}
 
+			return AuthenticationMechanismOutcome.AUTHENTICATED;
+		}
+		 
 		try {
 			HeaderValues header = authorizationHeader(exchange);
 			if(header == null) {
-				/**
-				 * Consider the user already logged only if an account exist and no authorization header was provided
-				 * 
-				 *  This will allow user deconnection by just sending another digest
-				 */
-				if(account != null) {
-					return AuthenticationMechanismOutcome.AUTHENTICATED;
-				}
-
 				return AuthenticationMechanismOutcome.NOT_AUTHENTICATED;
 			}
-
-			if(account != null) {
-				if(logger.isDebugEnabled()) {
-					logger.debug("De-log the user {} and re-log with the new credentials");
-				}
-
-				securityContext.logout();
-			}
-
+			
 			String authorization = header.getFirst();
 			byte[] bytes = authorizationBytes(securityContext, authorization);
 			String[] credentials = authorizationCredentials(securityContext, bytes);
@@ -126,8 +125,8 @@ public class RestAuthenticationMechanism implements AuthenticationMechanism {
 
 		try {
 			String encodedCredentials = authorization.substring(idx + BASIC.length());
-			if(logger.isDebugEnabled()) {
-				logger.debug("Encoded credentials: {}", encodedCredentials);
+			if(logger.isTraceEnabled()) {
+				logger.trace("Encoded credentials: {}", encodedCredentials);
 			}
 			
 			return Base64.getDecoder().decode(encodedCredentials);
@@ -178,9 +177,5 @@ class AuthenticationException extends RuntimeException {
 	public AuthenticationException(AuthenticationMechanismOutcome outcome, String message, Throwable cause) {
 		super(message, cause);
 		this.outcome = outcome;
-	}
-
-	boolean fail() {
-		return getMessage() != null;
 	}
 }

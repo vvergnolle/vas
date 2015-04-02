@@ -2,6 +2,7 @@ package org.vas.boot;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
+import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
@@ -71,9 +72,9 @@ public class Main {
 
 	
 	public static void main(String[] args) throws Exception {
-		PathHandler handler = Handlers.path();
-		lookupHandlerDescriptors(handler);
-		
+		PathHandler pathHandler = Handlers.path();
+		lookupHandlerDescriptors(pathHandler);
+
 		Properties properties = loadProperties();
 		
 		ServiceContainer serviceContainer = ServiceContainers.defaultContainer();
@@ -92,33 +93,7 @@ public class Main {
 			.setClassLoader(classLoader())
 			.setContextPath(CONTEXT_NAME);
 	
-		BootContext context = new BootContext() {
-			
-			@Override
-			public Properties properties() {
-			  return properties;
-			}
-			
-			@Override
-			public DeploymentInfo deploymentInfo() {
-			  return deploymentInfo;
-			}
-			
-			@Override
-			public PathHandler pathHandler() {
-				return handler;
-			}
-			
-			@Override
-			public void inject(Object object) {
-				serviceContainer.inject(object);
-			}
-			
-			@Override
-			public <T> T getService(Class<T> klass) {
-				return serviceContainer.get(klass);
-			}
-		};
+		BootContextImpl context = new BootContextImpl(properties, pathHandler, deploymentInfo, serviceContainer);
 		
 		lookupHandlerPostProcessors(context);
 		
@@ -126,9 +101,9 @@ public class Main {
 		deploymentManager.deploy();
 		
 		// The default deployment will be available at CONTEXT_NAME
-		handler.addPrefixPath(CONTEXT_NAME, deploymentManager.start());
+		pathHandler.addPrefixPath(CONTEXT_NAME, deploymentManager.start());
 
-		boot(handler);
+		boot(context.rootHttpHandler());
 	}
 
 	static void loadFixtures(ServiceContainer serviceContainer) throws Exception {
@@ -185,7 +160,7 @@ public class Main {
 	/**
 	 * Create & start the server
 	 */
-	static void boot(PathHandler handler) {
+	static void boot(HttpHandler handler) {
 		Undertow server = Undertow
 			.builder()
 			.setIoThreads(IO_THREADS)

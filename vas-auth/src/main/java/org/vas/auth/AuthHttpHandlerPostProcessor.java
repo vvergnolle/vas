@@ -34,13 +34,11 @@ public class AuthHttpHandlerPostProcessor implements HttpHandlerPostProcessor {
 	public void postProcess(BootContext context) {
 		DeploymentInfo deploymentInfo = context.deploymentInfo();
 		
-		// Add custom mechanism
 		deploymentInfo
 			.addAuthenticationMechanism(
 				RestAuthenticationMechanism.MECHANISM_NAME,
 				(name, formParserFactory, properties) -> new RestAuthenticationMechanism(context.getService(UserRepository.class)));
 		
-		// Setup login
 		LoginConfig loginConfig = new LoginConfig(RestAuthenticationMechanism.MECHANISM_NAME, "vas-db-realm");
 		deploymentInfo.setLoginConfig(loginConfig);
 		

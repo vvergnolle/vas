@@ -54,6 +54,8 @@ Where domain classes and repository lives.
 
 Annotation driven HTTP request. (Only GET support) 
 
+*Other projects descriptions coming soon.*
+
 ###Build & Run
 
 To build the project
