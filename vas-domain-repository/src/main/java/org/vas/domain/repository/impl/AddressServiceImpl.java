@@ -7,37 +7,54 @@ import javax.inject.Inject;
 import org.vas.domain.repository.Address;
 import org.vas.domain.repository.AddressRepository;
 import org.vas.domain.repository.AddressService;
+import org.vas.domain.repository.exception.AddressNotFoundException;
+import org.vas.domain.repository.exception.DomainRepositoryException;
 
 public class AddressServiceImpl implements AddressService {
-	
+
 	@Inject
 	AddressRepository repository;
 	
 	@Override
-	public Address fecth(int id) {
-	  try {
-	    return repository.queryForId(id);
+	public void remove(int id) {
+		try {
+			if(repository.deleteById(id) < 1) {
+				throw new AddressNotFoundException("Address " + id + " not found");
+			}
     } catch (SQLException e) {
-    	throw new RuntimeException(e);
+    	throw new DomainRepositoryException(e);
     }
 	}
-	
+
+	@Override
+	public Address fecth(int id) {
+		try {
+			return repository.queryForId(id);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Override
 	public Address create(String label, float latitude, float longitude) {
-	  Address address = new Address();
-	  address.label = label;
-	  address.latitude = latitude;
-	  address.longitude = longitude;
-	  
-	  return address;
+		Address address = new Address();
+		address.label = label;
+		address.latitude = latitude;
+		address.longitude = longitude;
+
+		return address;
 	}
 
 	@Override
 	public void save(Address address) {
-	  try {
-	    repository.create(address);
-    } catch (SQLException e) {
-    	throw new RuntimeException(e);
-    }
+		try {
+			if (address.id == 0) {
+				repository.create(address);
+			} else {
+				repository.update(address);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

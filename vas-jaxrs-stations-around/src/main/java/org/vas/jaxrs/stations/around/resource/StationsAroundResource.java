@@ -1,6 +1,7 @@
 package org.vas.jaxrs.stations.around.resource;
 
-import static org.vas.jaxrs.Responses.state;
+import static org.vas.jaxrs.Responses.noContent;
+import static org.vas.jaxrs.Responses.ok;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -31,10 +32,10 @@ public class StationsAroundResource extends VasResource {
 
 		Address address = addressService.fecth(id);
 		if(address == null) {
-			return state(address);
+			return noContent();
 		}
 
 		HttpResponse autolibResponse = autolibWs.geofilter(address.latitude, address.longitude, distance);
-		return state(new String(autolibResponse.bytes()));
+		return ok(new String(autolibResponse.bytes()));
 	}
 }
