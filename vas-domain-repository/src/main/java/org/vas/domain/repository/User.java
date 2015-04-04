@@ -43,7 +43,6 @@ public class User {
 	 * Roles
 	 */
 	
-	public static final String ANONYMOUS = "Anonymous";
 	public static final String ROLE = "User";
 	public static final Set<String> ROLES = new HashSet<>(1);
 	static {

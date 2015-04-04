@@ -12,13 +12,10 @@ import io.undertow.util.Headers;
 import io.undertow.util.StatusCodes;
 
 import java.util.Base64;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vas.domain.repository.User;
 import org.vas.domain.repository.UserRepository;
 
 /**
@@ -26,11 +23,6 @@ import org.vas.domain.repository.UserRepository;
  * 
  */
 public class RestAuthenticationMechanism implements AuthenticationMechanism {
-	
-	protected static final Set<String> ANONYMOUS_ROLES = new HashSet<>();
-	static {
-		ANONYMOUS_ROLES.add(User.ANONYMOUS);
-	}
 	
 	protected static final String MECHANISM_NAME = "REST-AUTH-MECHANISM";
 
