@@ -1,8 +1,6 @@
 package org.vas.jaxrs.address.resource;
 
 import static org.vas.jaxrs.Responses.created;
-import static org.vas.jaxrs.Responses.error;
-import static org.vas.jaxrs.Responses.noContent;
 import static org.vas.jaxrs.Responses.ok;
 
 import javax.inject.Inject;
@@ -19,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.vas.domain.repository.Address;
-import org.vas.domain.repository.exception.AddressNotFoundException;
 import org.vas.jaxrs.VasResource;
 import org.vas.opendata.paris.client.AutolibOpendataParisWs;
 import org.vas.opendata.paris.client.VelibOpendataParisWs;
@@ -37,17 +34,17 @@ public class AddressResource extends VasResource {
 	public Response get() {
 		return ok(currentUser().addresses);
 	}
-
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response create(
 		@FormParam("label") String label,
 		@FormParam("latitude") float lat,
 		@FormParam("longitude") float lng) {
-		
+
 		Address address = addressService.create(label, lat, lng);
 		address.user = currentUser();
-		
+
 		addressService.save(address);
 		return created(address.id);
 	}
@@ -58,12 +55,8 @@ public class AddressResource extends VasResource {
 			@FormParam("label") @DefaultValue("") String label,
 			@FormParam("latitude") @DefaultValue("0") float lat,
 			@FormParam("longitude") @DefaultValue("0") float lng) {
-		
+
 		Address address = addressService.fecth(id);
-		if(address == null) {
-			return noContent();
-		}
-		
 		boolean changes = false;
 		
 		if(!label.isEmpty()) {
@@ -88,19 +81,10 @@ public class AddressResource extends VasResource {
 		return ok();
 	}
 	
-	@Path("{id}")
 	@DELETE
+	@Path("{id}")
 	public Response delete(@PathParam("id") int id) {
-		try {
-			addressService.remove(id);
-		}
-		catch (AddressNotFoundException e) {
-			return noContent();
-		}
-		catch (Exception e) {
-			return error(e);
-		}
-		
+		addressService.remove(id);
 		return ok();
 	}
 }

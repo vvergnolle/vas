@@ -13,7 +13,7 @@ import org.vas.domain.repository.exception.DomainRepositoryException;
 public class AddressServiceImpl implements AddressService {
 
 	@Inject
-	AddressRepository repository;
+	protected AddressRepository repository;
 	
 	@Override
 	public void remove(int id) {
@@ -29,9 +29,14 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public Address fecth(int id) {
 		try {
-			return repository.queryForId(id);
+			Address address = repository.queryForId(id);
+			if(address == null) {
+				throw new AddressNotFoundException();
+			}
+
+			return address;
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new DomainRepositoryException(e);
 		}
 	}
 
@@ -54,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
 				repository.update(address);
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new DomainRepositoryException(e);
 		}
 	}
 }

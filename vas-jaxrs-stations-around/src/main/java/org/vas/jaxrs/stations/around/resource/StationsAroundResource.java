@@ -1,6 +1,5 @@
 package org.vas.jaxrs.stations.around.resource;
 
-import static org.vas.jaxrs.Responses.noContent;
 import static org.vas.jaxrs.Responses.ok;
 
 import javax.inject.Inject;
@@ -19,10 +18,10 @@ import org.vas.opendata.paris.client.VelibOpendataParisWs;
 public class StationsAroundResource extends VasResource {
 
 	@Inject
-	protected	AutolibOpendataParisWs autolibWs;
-	
-	@Inject
 	protected VelibOpendataParisWs velibWs;
+
+	@Inject
+	protected	AutolibOpendataParisWs autolibWs;
 	
 	@GET
 	@Path("{distance}")
@@ -31,9 +30,6 @@ public class StationsAroundResource extends VasResource {
 		@PathParam("distance") int distance) {
 
 		Address address = addressService.fecth(id);
-		if(address == null) {
-			return noContent();
-		}
 
 		HttpResponse autolibResponse = autolibWs.geofilter(address.latitude, address.longitude, distance);
 		return ok(new String(autolibResponse.bytes()));

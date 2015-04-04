@@ -8,12 +8,12 @@ public class StationsAroundJaxrsDescriptor implements JaxrsDescriptor {
 
 	@Override
 	public String id() {
-	  return new String("stations-around");
+	  return "stations-around";
 	}
 	
 	@Override
 	public String mapping() {
-	  return new String("/rest/stations/around/*");
+	  return "/rest/stations/around/*";
 	}
 	
 	@Override

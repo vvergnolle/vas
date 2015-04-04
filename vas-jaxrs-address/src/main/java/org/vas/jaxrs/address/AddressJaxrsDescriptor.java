@@ -8,12 +8,12 @@ public class AddressJaxrsDescriptor implements JaxrsDescriptor {
 
 	@Override
 	public String id() {
-	  return new String("address");
+	  return "address";
 	}
 	
 	@Override
   public String mapping() {
-	  return new String("/rest/address/*");
+	  return "/rest/address/*";
   }
 	
 	@Override

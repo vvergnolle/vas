@@ -26,6 +26,8 @@
     <module>vas-opendata-paris-proxy</module>
     <module>vas-jaxrs-stations-around</module>
     <module>vas-cors</module>
+    <module>vas-exceptions</module>
+    <module>vas-core</module>
   </modules>
 
   <dependencies>

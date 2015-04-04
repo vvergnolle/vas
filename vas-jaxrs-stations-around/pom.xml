@@ -21,6 +21,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>vas-jaxrs-address</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>vas-opendata-paris-client</artifactId>
       <version>${project.version}</version>
     </dependency>

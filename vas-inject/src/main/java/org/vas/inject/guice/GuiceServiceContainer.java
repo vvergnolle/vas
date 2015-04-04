@@ -21,7 +21,7 @@ public class GuiceServiceContainer implements ServiceContainer {
 		List<Module> modules = new ArrayList<>();
 		Iterator<GuiceModuleDescriptor> moduleDescriptors = ServiceLoader.load(GuiceModuleDescriptor.class).iterator();
 		moduleDescriptors.forEachRemaining(descriptor -> modules.add(descriptor.module(properties)));
-		
+
 		injector = Guice.createInjector(modules);
 	}
 	

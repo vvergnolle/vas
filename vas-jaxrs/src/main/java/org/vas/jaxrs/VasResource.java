@@ -1,6 +1,6 @@
 package org.vas.jaxrs;
 
-import static org.vas.jaxrs.Responses.okSuccess;
+import static org.vas.jaxrs.Responses.ok;
 
 import java.security.Principal;
 
@@ -13,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vas.commons.bean.UserBean;
 import org.vas.commons.security.UserPrincipal;
 import org.vas.domain.repository.AddressService;
@@ -22,6 +24,8 @@ import org.vas.domain.repository.UserService;
 @Produces(MediaType.APPLICATION_JSON)
 public abstract class VasResource {
 
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Inject
 	protected UserService userService;
 	
@@ -29,12 +33,12 @@ public abstract class VasResource {
 	protected AddressService addressService;
 	
 	@Context
-	SecurityContext securityContext;
+	protected SecurityContext securityContext;
 	
 	@GET
 	@Path("ready")
 	public Response ready() {
-		return okSuccess();
+		return ok();
 	}
 	
 	protected User currentUser() {

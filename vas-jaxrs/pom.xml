@@ -24,6 +24,11 @@
       <artifactId>vas-domain-repository</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>vas-inject</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.wink</groupId>
