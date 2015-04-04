@@ -43,22 +43,23 @@ It also contains a Logout servlet that just call the SecurityContext#logout meth
 Little bootstrap project which just a main class that is responsible to boot the application.
 As the application work standalone, you can pass these parameters (as java parameters: -Dxxx) in order to configure VAS:
 
-vas.conf: A java properties file [*]
-vas.fixture.user: A yaml file to populate users at boot time (check *vas-boot/src/main/resources/user.fixture.yaml* file to see the default entries)
+> vas.conf: A java properties file [*]
 
-**vas-domain-repository**:
+> vas.fixture.user: A yaml file to populate users at boot time
 
-Where domain classes and repository lives.
+(check *vas-boot/src/main/resources/user.fixture.yaml* file to see the default entries)
 
-**vas-http-resource**:
+**vas-core**:
 
-Annotation driven HTTP request. (Only GET support) 
-
-*Other projects descriptions coming soon.*
+Define application basics (base services).
 
 **vas-inject**:
 
 Provide dependency injection.
+
+**vas-domain-repository**:
+
+Where domain classes and repository lives.
 
 **vas-jaxrs-address**:
 
@@ -72,6 +73,10 @@ Restful endpoint for stations around an address.
 
 Rest support via JAXRS (Apache Wink).
 
+**vas-exceptions**:
+
+Define behaviors when some exceptions are raised.
+
 **vas-opendata-paris-client**:
 
 Provide interfaces (use vas-http-resource) in order to call the Opendata web services.
@@ -83,6 +88,12 @@ Define a simple proxy (debug) and a caching system for the Opendata web services
 **vas-server**:
 
 Define debug endpoints.
+
+**vas-http-resource**:
+
+Annotation driven HTTP request. (Only GET support) 
+
+*Other projects descriptions coming soon.*
 
 ###Build & Run
 
