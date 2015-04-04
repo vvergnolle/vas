@@ -5,6 +5,11 @@ the one that you select.
 
 This is a school project that mean **Velib and Autolib Stations** and can be translated just as is in French by **going**.
 
+### Throughput Graph
+
+[![](https://graphs.waffle.io/vincent7894/vas/throughput.svg)](https://waffle.io/vincent7894/vas/metrics)
+
+
 ###Technologies
 
 This projet was built using :
