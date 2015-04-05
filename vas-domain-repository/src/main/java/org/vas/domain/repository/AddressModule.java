@@ -7,7 +7,8 @@ import org.vas.domain.repository.exception.DomainRepositoryException;
 import org.vas.domain.repository.impl.AddressServiceImpl;
 import org.vas.domain.repository.impl.RepositoriesImpl;
 import org.vas.domain.repository.impl.UserServiceImpl;
-import org.vas.inject.guice.GuiceModuleDescriptor;
+import org.vas.domain.repository.listener.DomainRepositoryEventListener;
+import org.vas.inject.ModuleDescriptor;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
@@ -16,7 +17,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-public class AddressModule extends AbstractModule implements GuiceModuleDescriptor {
+public class AddressModule extends AbstractModule implements ModuleDescriptor {
 
 	private Properties properties;
 
@@ -52,6 +53,8 @@ public class AddressModule extends AbstractModule implements GuiceModuleDescript
     } catch (SQLException e) {
     	throw new DomainRepositoryException(e);
     }
+
+    bind(DomainRepositoryEventListener.class).asEagerSingleton();
 	}
 	
 	@Override

@@ -10,6 +10,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <version.undertow>1.2.0.Beta10</version.undertow>
+    <version.guava>18.0</version.guava>
+    <version.testng>6.8.21</version.testng>
   </properties>
 
   <modules>
@@ -28,9 +30,17 @@
     <module>vas-cors</module>
     <module>vas-exceptions</module>
     <module>vas-core</module>
+    <module>vas-tests</module>
+    <module>vas-launcher</module>
   </modules>
 
   <dependencies>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>2.0.0</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -44,7 +54,7 @@
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>6.8.21</version>
+      <version>${version.testng}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -61,6 +71,11 @@
       <groupId>io.undertow</groupId>
       <artifactId>undertow-servlet</artifactId>
       <version>${version.undertow}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${version.guava}</version>
     </dependency>
   </dependencies>
 

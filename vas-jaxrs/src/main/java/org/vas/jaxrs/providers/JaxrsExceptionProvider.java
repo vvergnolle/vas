@@ -17,8 +17,8 @@ import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vas.commons.bean.MsgBean;
-import org.vas.inject.ServiceContainer;
-import org.vas.inject.ServiceContainers;
+import org.vas.inject.Services;
+import org.vas.inject.ServicesUtil;
 import org.vas.jaxrs.JaxrsExceptionDescriptor;
 
 @Provider
@@ -30,7 +30,7 @@ public class JaxrsExceptionProvider implements ExceptionMapper<Exception> {
 	protected final Map<Class<? extends Exception>, Function<Exception, ResponseBuilder>> descriptors;
 
 	{
-		ServiceContainer container = ServiceContainers.defaultContainer();
+		Services container = ServicesUtil.defaultContainer();
 		Map<Class<? extends Exception>, Function<Exception, ResponseBuilder>> jaxrsDescriptors = new HashMap<>();
 
 		ServiceLoader

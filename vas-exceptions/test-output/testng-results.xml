@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="1689" started-at="2015-04-05T15:59:29Z" finished-at="2015-04-05T15:59:31Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="1689" started-at="2015-04-05T15:59:29Z" finished-at="2015-04-05T15:59:31Z">
+      <class name="org.vas.exceptions.test.TestExceptions">
+        <test-method status="PASS" signature="itShouldRespondWith501()[pri:0, instance:org.vas.exceptions.test.TestExceptions@6f7fd0e6]" name="itShouldRespondWith501" duration-ms="528" started-at="2015-04-05T17:59:30Z" finished-at="2015-04-05T17:59:31Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- itShouldRespondWith501 -->
+      </class> <!-- org.vas.exceptions.test.TestExceptions -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

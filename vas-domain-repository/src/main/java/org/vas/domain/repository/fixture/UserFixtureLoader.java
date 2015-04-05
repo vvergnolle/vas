@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vas.domain.repository.Repositories;
 import org.vas.domain.repository.User;
 import org.vas.domain.repository.UserRepository;
 import org.yaml.snakeyaml.Yaml;
@@ -15,14 +14,12 @@ public class UserFixtureLoader {
 	protected Yaml yaml = new Yaml();
 
 	@SuppressWarnings("unchecked")
-	public void load(InputStream in, Repositories repositories) throws Exception {
+	public void load(InputStream in, UserRepository userRepository) throws Exception  {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Load default users");
 		}
 
-		UserRepository userRepository = repositories.user();
 		Iterable<Object> iterable = (Iterable<Object>) yaml.load(in);
-		
 		userRepository.callBatchTasks(() -> {
 			iterable.forEach(o -> {
 				User user = (User) o;

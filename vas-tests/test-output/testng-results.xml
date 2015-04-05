@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="3" passed="3">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="625" started-at="2015-04-05T18:23:23Z" finished-at="2015-04-05T18:23:23Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="625" started-at="2015-04-05T18:23:23Z" finished-at="2015-04-05T18:23:23Z">
+      <class name="org.vas.test.VasBootListenerTest">
+        <test-method status="PASS" signature="itShouldHaveEnv()[pri:0, instance:org.vas.test.VasBootListenerTest@6767c1fc]" name="itShouldHaveEnv" duration-ms="31" started-at="2015-04-05T20:23:23Z" finished-at="2015-04-05T20:23:23Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- itShouldHaveEnv -->
+        <test-method status="PASS" signature="itShouldHaveVas()[pri:0, instance:org.vas.test.VasBootListenerTest@6767c1fc]" name="itShouldHaveVas" duration-ms="0" started-at="2015-04-05T20:23:23Z" finished-at="2015-04-05T20:23:23Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- itShouldHaveVas -->
+        <test-method status="PASS" signature="itShouldHaveServerConf()[pri:0, instance:org.vas.test.VasBootListenerTest@6767c1fc]" name="itShouldHaveServerConf" duration-ms="0" started-at="2015-04-05T20:23:23Z" finished-at="2015-04-05T20:23:23Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- itShouldHaveServerConf -->
+      </class> <!-- org.vas.test.VasBootListenerTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

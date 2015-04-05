@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.vas.inject.ServiceContainers;
+import org.vas.inject.ServicesUtil;
 import org.vas.opendata.paris.client.AutolibOpendataParisWs;
 import org.vas.opendata.paris.client.VelibOpendataParisWs;
 
@@ -61,7 +61,7 @@ public class ProxyCacheHttpHandler implements HttpHandler {
 
 	protected VelibOpendataParisWs velibWs() {
 		if(velibWs == null) {
-			velibWs = ServiceContainers.defaultContainer().get(VelibOpendataParisWs.class);
+			velibWs = ServicesUtil.defaultContainer().get(VelibOpendataParisWs.class);
 		}
 
 	  return velibWs;
@@ -69,7 +69,7 @@ public class ProxyCacheHttpHandler implements HttpHandler {
 
 	private AutolibOpendataParisWs autolibWs() {
 		if(autolibWs == null) {
-			autolibWs = ServiceContainers.defaultContainer().get(AutolibOpendataParisWs.class);
+			autolibWs = ServicesUtil.defaultContainer().get(AutolibOpendataParisWs.class);
 		}
 
 	  return autolibWs;

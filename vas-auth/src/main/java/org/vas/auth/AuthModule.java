@@ -4,12 +4,12 @@ import io.undertow.security.idm.IdentityManager;
 
 import java.util.Properties;
 
-import org.vas.inject.guice.GuiceModuleDescriptor;
+import org.vas.inject.ModuleDescriptor;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
-public class AuthModule extends AbstractModule implements GuiceModuleDescriptor {
+public class AuthModule extends AbstractModule implements ModuleDescriptor {
 
 	@Override
 	protected void configure() {

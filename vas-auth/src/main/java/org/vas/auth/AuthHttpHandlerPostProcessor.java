@@ -32,12 +32,13 @@ public class AuthHttpHandlerPostProcessor implements HttpHandlerPostProcessor {
 
 	@Override
 	public void postProcess(BootContext context) {
+		boolean statelessAuth = statelessAuth(context);
 		DeploymentInfo deploymentInfo = context.deploymentInfo();
 		
 		deploymentInfo
 			.addAuthenticationMechanism(
 				RestAuthenticationMechanism.MECHANISM_NAME,
-				(name, formParserFactory, properties) -> new RestAuthenticationMechanism(context.getService(UserRepository.class)));
+				(name, formParserFactory, properties) -> new RestAuthenticationMechanism(statelessAuth, context.getService(UserRepository.class)));
 		
 		LoginConfig loginConfig = new LoginConfig(RestAuthenticationMechanism.MECHANISM_NAME, "vas-db-realm");
 		deploymentInfo.setLoginConfig(loginConfig);
@@ -54,6 +55,16 @@ public class AuthHttpHandlerPostProcessor implements HttpHandlerPostProcessor {
 		
 		logoutServlet(context, deploymentInfo);
 	}
+
+	protected boolean statelessAuth(BootContext context) {
+	  Object object = context.properties().get("vas.auth.stateless");
+	  if(object == null) {
+	  	return false;  
+	  }
+	  else {
+	  	return Boolean.valueOf(object.toString());
+	  }
+  }
 
 	protected void logoutServlet(BootContext context, DeploymentInfo deploymentInfo) {
 	  String logoutServlet = context.properties().getProperty(LogoutServlet.ENABLE_PROPERTY, "true");

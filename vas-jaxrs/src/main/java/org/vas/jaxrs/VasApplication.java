@@ -6,8 +6,8 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.vas.inject.ServiceContainer;
-import org.vas.inject.ServiceContainers;
+import org.vas.inject.Services;
+import org.vas.inject.ServicesUtil;
 import org.vas.jaxrs.providers.SharedProviders;
 
 public abstract class VasApplication extends Application {
@@ -15,7 +15,7 @@ public abstract class VasApplication extends Application {
 	protected final Set<Object> singletons = new HashSet<>();
 	
 	{
-		ServiceContainer container = ServiceContainers.defaultContainer();
+		Services container = ServicesUtil.defaultContainer();
 		resources().forEach((resource) -> {
 			container.inject(resource);
 			singletons.add(resource);

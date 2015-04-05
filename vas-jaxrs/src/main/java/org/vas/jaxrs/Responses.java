@@ -11,7 +11,7 @@ public final class Responses {
 	public static Response notImplemented() {
 		return Response.status(501).build();
 	}
-	
+
 	public static Response noContent() {
 		return Response.noContent().build();
 	}

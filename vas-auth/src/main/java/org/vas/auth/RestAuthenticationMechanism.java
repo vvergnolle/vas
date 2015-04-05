@@ -23,7 +23,7 @@ import org.vas.domain.repository.UserRepository;
  * 
  */
 public class RestAuthenticationMechanism implements AuthenticationMechanism {
-	
+
 	protected static final String MECHANISM_NAME = "REST-AUTH-MECHANISM";
 
 	private static final String COLON = ":";
@@ -32,9 +32,11 @@ public class RestAuthenticationMechanism implements AuthenticationMechanism {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected final UserRepository repository;
+	protected final boolean stateless;
 
-	public RestAuthenticationMechanism(UserRepository repository) {
+	public RestAuthenticationMechanism(boolean stateless, UserRepository repository) {
 		super();
+		this.stateless = stateless;
 		this.repository = repository;
 	}
 	
@@ -75,7 +77,7 @@ public class RestAuthenticationMechanism implements AuthenticationMechanism {
 			return e.outcome;
 		}
 
-		securityContext.authenticationComplete(account, MECHANISM_NAME, true);
+		securityContext.authenticationComplete(account, MECHANISM_NAME, !stateless);
 		return AuthenticationMechanismOutcome.AUTHENTICATED;
 	}
 

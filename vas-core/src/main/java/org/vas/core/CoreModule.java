@@ -3,12 +3,13 @@ package org.vas.core;
 import java.util.Properties;
 
 import org.vas.commons.messages.MessageHelper;
-import org.vas.inject.guice.GuiceModuleDescriptor;
+import org.vas.inject.ModuleDescriptor;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
-public class CoreModule extends AbstractModule implements GuiceModuleDescriptor {
+public class CoreModule extends AbstractModule implements ModuleDescriptor {
 
 	private static final String LOCALE = "vas.locale";
 	private static final String MESSAGES_LOCATION = "vas.messages";
@@ -18,6 +19,7 @@ public class CoreModule extends AbstractModule implements GuiceModuleDescriptor 
 
 	@Override
 	protected void configure() {
+		bind(EventBus.class).asEagerSingleton();
 		bind(MessageHelper.class).toInstance(createMessageHelper());
 	}
 

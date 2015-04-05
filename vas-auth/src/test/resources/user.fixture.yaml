@@ -1,0 +1,3 @@
+- !!org.vas.domain.repository.User
+    password: test
+    username: test
