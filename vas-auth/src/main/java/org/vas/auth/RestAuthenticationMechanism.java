@@ -103,8 +103,8 @@ public class RestAuthenticationMechanism implements AuthenticationMechanism {
 
 	protected HeaderValues authorizationHeader(HttpServerExchange exchange) {
 		HeaderValues header = exchange.getRequestHeaders().get(Headers.AUTHORIZATION);
-		if(logger.isDebugEnabled()) {
-			logger.debug("Authorization header: " + header);
+		if(logger.isTraceEnabled()) {
+			logger.trace("Authorization header: " + header);
 		}
 		
 		return header;
