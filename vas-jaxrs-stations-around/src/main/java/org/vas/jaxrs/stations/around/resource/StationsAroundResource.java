@@ -17,21 +17,19 @@ import org.vas.opendata.paris.client.VelibOpendataParisWs;
 @Path("/{id}")
 public class StationsAroundResource extends VasResource {
 
-	@Inject
-	protected VelibOpendataParisWs velibWs;
+  @Inject
+  protected VelibOpendataParisWs velibWs;
 
-	@Inject
-	protected	AutolibOpendataParisWs autolibWs;
-	
-	@GET
-	@Path("{distance}")
-	public Response around(
-		@PathParam("id") int id,
-		@PathParam("distance") int distance) {
+  @Inject
+  protected AutolibOpendataParisWs autolibWs;
 
-		Address address = addressService.fecth(id);
+  @GET
+  @Path("{distance}")
+  public Response around(@PathParam("id") int id, @PathParam("distance") int distance) {
 
-		HttpResponse autolibResponse = autolibWs.geofilter(address.latitude, address.longitude, distance);
-		return ok(new String(autolibResponse.bytes()));
-	}
+    Address address = addressService.fecth(id);
+
+    HttpResponse autolibResponse = autolibWs.geofilter(address.latitude, address.longitude, distance);
+    return ok(new String(autolibResponse.bytes()));
+  }
 }

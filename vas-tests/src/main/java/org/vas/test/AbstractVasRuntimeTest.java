@@ -12,10 +12,8 @@ import org.vas.test.listener.VasServerTestListener;
  *
  */
 @VasBoot(custom = true, profile = Env.Profile.RUNTIME)
-@Listeners({
-	VasServerTestListener.class
-})
+@Listeners(VasServerTestListener.class)
 public class AbstractVasRuntimeTest {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 }

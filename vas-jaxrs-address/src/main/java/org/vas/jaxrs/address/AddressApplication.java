@@ -8,8 +8,8 @@ import org.vas.jaxrs.address.resource.AddressResource;
 
 public class AddressApplication extends VasApplication {
 
-	@Override
-	protected List<Object> resources() {
-	  return Arrays.asList(new AddressResource());
-	}
+  @Override
+  protected List<Object> resources() {
+    return Arrays.asList(new AddressResource());
+  }
 }

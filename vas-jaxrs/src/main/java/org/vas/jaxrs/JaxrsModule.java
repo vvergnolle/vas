@@ -10,13 +10,13 @@ import com.google.inject.Module;
 
 public class JaxrsModule extends AbstractModule implements ModuleDescriptor {
 
-	@Override
-	protected void configure() {
-	  bind(JaxrsExceptionProvider.class);
-	}
+  @Override
+  protected void configure() {
+    bind(JaxrsExceptionProvider.class);
+  }
 
-	@Override
-	public Module module(Properties properties) {
-	  return this;
-	}
+  @Override
+  public Module module(Properties properties) {
+    return this;
+  }
 }

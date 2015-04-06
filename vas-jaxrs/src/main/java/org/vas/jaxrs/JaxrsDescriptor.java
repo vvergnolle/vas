@@ -4,9 +4,9 @@ import javax.ws.rs.core.Application;
 
 public interface JaxrsDescriptor {
 
-	String id();
+  String id();
 
-	String mapping();
-	
-	Class<? extends Application> applicationClass();
+  String mapping();
+
+  Class<? extends Application> applicationClass();
 }

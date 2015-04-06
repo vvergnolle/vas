@@ -11,8 +11,8 @@ import org.vas.jaxrs.VasResource;
 @Path("/infos")
 public class UserResource extends VasResource {
 
-	@GET
-	public Response infos() {
-		return ok(currentUserBean());
-	}
+  @GET
+  public Response infos() {
+    return ok(currentUserBean());
+  }
 }

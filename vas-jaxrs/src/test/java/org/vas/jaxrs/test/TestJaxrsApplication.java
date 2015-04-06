@@ -8,8 +8,8 @@ import org.vas.jaxrs.test.resource.FooBarResource;
 
 public class TestJaxrsApplication extends VasApplication {
 
-	@Override
-	protected List<Object> resources() {
-	  return Arrays.asList(new FooBarResource());
-	}
+  @Override
+  protected List<Object> resources() {
+    return Arrays.asList(new FooBarResource());
+  }
 }

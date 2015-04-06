@@ -12,32 +12,31 @@ import org.yaml.snakeyaml.Yaml;
 
 public final class YamlFixtureDump {
 
-	public static void main(String[] args) {
-		Writer writer = new StringWriter();
-		new Yaml(options())
-			.dump(users(), writer);
-		
-		System.out.println(writer.toString());
-		IOUtils.closeQuietly(writer);
-	}
+  public static void main(String[] args) {
+    Writer writer = new StringWriter();
+    new Yaml(options()).dump(users(), writer);
 
-	private static DumperOptions options() {
-		DumperOptions options = new DumperOptions();
-	  options.setIndent(4);
-	  options.setPrettyFlow(true);
-	  
-	  return options;
+    System.out.println(writer.toString());
+    IOUtils.closeQuietly(writer);
   }
 
-	static List<Object> users() {
-	  User user = new User();
-	  user.username = "root";
-	  user.password = "root";
-	  
-	  User user2 = new User();
-	  user2.username = "vincent";
-	  user2.password = "vincent";
-	  
-		return Arrays.asList(user, user2);
+  private static DumperOptions options() {
+    DumperOptions options = new DumperOptions();
+    options.setIndent(4);
+    options.setPrettyFlow(true);
+
+    return options;
+  }
+
+  static List<Object> users() {
+    User user = new User();
+    user.username = "root";
+    user.password = "root";
+
+    User user2 = new User();
+    user2.username = "vincent";
+    user2.password = "vincent";
+
+    return Arrays.asList(user, user2);
   }
 }

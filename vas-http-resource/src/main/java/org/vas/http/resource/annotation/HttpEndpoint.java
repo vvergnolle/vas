@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface HttpEndpoint {
 
-	/**
-	 * HTTP base URL
-	 */
-	String value();
+  /**
+   * HTTP base URL
+   */
+  String value();
 }

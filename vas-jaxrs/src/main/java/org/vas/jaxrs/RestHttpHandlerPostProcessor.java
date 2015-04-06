@@ -12,31 +12,19 @@ import org.vas.commons.http.HttpHandlerPostProcessor;
 
 public class RestHttpHandlerPostProcessor implements HttpHandlerPostProcessor {
 
-	@Override
-	public void postProcess(BootContext context) {
-		DeploymentInfo deploymentInfo = context.deploymentInfo();
-		
-		ServiceLoader
-			.load(JaxrsDescriptor.class)
-			.iterator()
-			.forEachRemaining(descriptor -> {
-				ServletInfo servletInfo = toServletInfo(descriptor);
-				deploymentInfo.addServlet(servletInfo);
-			});
-	}
+  @Override
+  public void postProcess(BootContext context) {
+    DeploymentInfo deploymentInfo = context.deploymentInfo();
 
-	protected ServletInfo toServletInfo(JaxrsDescriptor descriptor) {
-		return Servlets
-			.servlet(
-					descriptor.id(),
-					RestServlet.class
-			)
-			.addMappings(descriptor.mapping()) 
-			.setLoadOnStartup(1)
-			.addInitParam(
-					RestServlet.APPLICATION_INIT_PARAM,
-					descriptor.applicationClass().getName()
-			)
-			.addInitParam("requestProcessorAttribute", descriptor.id());
+    ServiceLoader.load(JaxrsDescriptor.class).iterator().forEachRemaining(descriptor -> {
+      ServletInfo servletInfo = toServletInfo(descriptor);
+      deploymentInfo.addServlet(servletInfo);
+    });
+  }
+
+  protected ServletInfo toServletInfo(JaxrsDescriptor descriptor) {
+    return Servlets.servlet(descriptor.id(), RestServlet.class).addMappings(descriptor.mapping()).setLoadOnStartup(1)
+      .addInitParam(RestServlet.APPLICATION_INIT_PARAM, descriptor.applicationClass().getName())
+      .addInitParam("requestProcessorAttribute", descriptor.id());
   }
 }

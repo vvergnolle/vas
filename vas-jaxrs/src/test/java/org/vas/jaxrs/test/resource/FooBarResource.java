@@ -12,11 +12,11 @@ import org.vas.jaxrs.VasResource;
 @Path("/foobar")
 public class FooBarResource extends VasResource {
 
-	public static final String STRING = "foobar";
+  public static final String STRING = "foobar";
 
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response invoke() {
-		return Responses.ok(STRING);
-	}
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response invoke() {
+    return Responses.ok(STRING);
+  }
 }

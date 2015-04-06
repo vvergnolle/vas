@@ -12,24 +12,24 @@ import org.vas.jaxrs.providers.SharedProviders;
 
 public abstract class VasApplication extends Application {
 
-	protected final Set<Object> singletons = new HashSet<>();
-	
-	{
-		Services container = ServicesUtil.defaultContainer();
-		resources().forEach((resource) -> {
-			container.inject(resource);
-			singletons.add(resource);
-		});
-		
-		for(Class<?> klass : SharedProviders.CLASSES) {
-			singletons.add(container.get(klass));
-		}
-	}
+  protected final Set<Object> singletons = new HashSet<>();
 
-	protected abstract List<Object> resources();
+  {
+    Services container = ServicesUtil.defaultContainer();
+    resources().forEach((resource) -> {
+      container.inject(resource);
+      singletons.add(resource);
+    });
 
-	@Override
-	public Set<Object> getSingletons() {
-		return singletons;
-	}
+    for (Class<?> klass : SharedProviders.CLASSES) {
+      singletons.add(container.get(klass));
+    }
+  }
+
+  protected abstract List<Object> resources();
+
+  @Override
+  public Set<Object> getSingletons() {
+    return singletons;
+  }
 }

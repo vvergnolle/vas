@@ -7,14 +7,14 @@ import io.undertow.server.HttpHandler;
  * 
  */
 public interface HttpHandlerDescriptor {
-	
-	/**
-	 * The uri that will be bind to your handler
-	 */
-	String uri();
 
-	/**
-	 * The handler class
-	 */
-	Class<? extends HttpHandler> httpHandler();
+  /**
+   * The uri that will be bind to your handler
+   */
+  String uri();
+
+  /**
+   * The handler class
+   */
+  Class<? extends HttpHandler> httpHandler();
 }

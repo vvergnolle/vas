@@ -24,61 +24,54 @@ import org.vas.jaxrs.JaxrsExceptionDescriptor;
 @Provider
 public class JaxrsExceptionProvider implements ExceptionMapper<Exception> {
 
-	public static final JaxrsExceptionProvider INSTANCE = new JaxrsExceptionProvider();
+  public static final JaxrsExceptionProvider INSTANCE = new JaxrsExceptionProvider();
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	protected final Map<Class<? extends Exception>, Function<Exception, ResponseBuilder>> descriptors;
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
+  protected final Map<Class<? extends Exception>, Function<Exception, ResponseBuilder>> descriptors;
 
-	{
-		Services container = ServicesUtil.defaultContainer();
-		Map<Class<? extends Exception>, Function<Exception, ResponseBuilder>> jaxrsDescriptors = new HashMap<>();
+  {
+    Services container = ServicesUtil.defaultContainer();
+    Map<Class<? extends Exception>, Function<Exception, ResponseBuilder>> jaxrsDescriptors = new HashMap<>();
 
-		ServiceLoader
-			.load(JaxrsExceptionDescriptor.class)
-			.iterator()
-			.forEachRemaining((d) -> {
-				Function<Exception, ResponseBuilder> function = d.function();
-				container.inject(function);
+    ServiceLoader.load(JaxrsExceptionDescriptor.class).iterator().forEachRemaining((d) -> {
+      Function<Exception, ResponseBuilder> function = d.function();
+      container.inject(function);
 
-				jaxrsDescriptors.put(d.exception(), function);
-			});
+      jaxrsDescriptors.put(d.exception(), function);
+    });
 
-		descriptors = Collections.unmodifiableMap(jaxrsDescriptors);
-	}
+    descriptors = Collections.unmodifiableMap(jaxrsDescriptors);
+  }
 
-	@Override
+  @Override
   public Response toResponse(Exception e) {
-		Class<? extends Exception> klass = e.getClass();
+    Class<? extends Exception> klass = e.getClass();
 
-		for(Entry<Class<? extends Exception>, Function<Exception, ResponseBuilder>> entry : descriptors.entrySet()) {
-			Class<? extends Exception> descriptorExceptionClass = entry.getKey();
+    for (Entry<Class<? extends Exception>, Function<Exception, ResponseBuilder>> entry : descriptors.entrySet()) {
+      Class<? extends Exception> descriptorExceptionClass = entry.getKey();
 
-			if(descriptorExceptionClass == klass || descriptorExceptionClass.isAssignableFrom(klass)) {
-				if(logger.isTraceEnabled()) {
-					logger.trace("Found exception mapper {}", descriptorExceptionClass);
-				}
+      if(descriptorExceptionClass == klass || descriptorExceptionClass.isAssignableFrom(klass)) {
+        if(logger.isTraceEnabled()) {
+          logger.trace("Found exception mapper {}", descriptorExceptionClass);
+        }
 
-				ResponseBuilder response = entry.getValue().apply(e);
-				response.type(MediaType.APPLICATION_JSON);
-				return response.build();
-			}
-		}
-		
-		/*
-		 * Check Wink WebApplicationException that already provide a Response 
-		 */
-		if(e instanceof WebApplicationException) {
-			return ((WebApplicationException) e).getResponse();
-		}
+        ResponseBuilder response = entry.getValue().apply(e);
+        response.type(MediaType.APPLICATION_JSON);
+        return response.build();
+      }
+    }
 
-		if(logger.isErrorEnabled()) {
-			logger.error("Unhandled exception", e);
-		}
-		
-	  return Response
-	  	.serverError()
-	  	.entity(MsgBean.of(e.getMessage()))
-	  	.type(MediaType.APPLICATION_JSON)
-	  	.build();
+    /*
+     * Check Wink WebApplicationException that already provide a Response
+     */
+    if(e instanceof WebApplicationException) {
+      return ((WebApplicationException) e).getResponse();
+    }
+
+    if(logger.isErrorEnabled()) {
+      logger.error("Unhandled exception", e);
+    }
+
+    return Response.serverError().entity(MsgBean.of(e.getMessage())).type(MediaType.APPLICATION_JSON).build();
   }
 }

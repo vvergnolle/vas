@@ -11,13 +11,13 @@ import org.vas.jaxrs.JaxrsExceptionDescriptor;
 
 public class AddressNotFoundExceptionDescriptor implements JaxrsExceptionDescriptor {
 
-	@Override
-	public Class<? extends Exception> exception() {
-	  return AddressNotFoundException.class;
-	}
-	
-	@Override
-	public Function<Exception, ResponseBuilder> function() {
-	  return (e) -> noContent();
-	}
+  @Override
+  public Class<? extends Exception> exception() {
+    return AddressNotFoundException.class;
+  }
+
+  @Override
+  public Function<Exception, ResponseBuilder> function() {
+    return (e) -> noContent();
+  }
 }

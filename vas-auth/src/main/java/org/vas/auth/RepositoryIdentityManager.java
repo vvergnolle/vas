@@ -16,42 +16,42 @@ import com.google.inject.Inject;
 
 public class RepositoryIdentityManager implements IdentityManager {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Inject
-	protected UserRepository repository;
+  @Inject
+  protected UserRepository repository;
 
-	@Override
-	public Account verify(Account account) {
-		return account;
-	}
+  @Override
+  public Account verify(Account account) {
+    return account;
+  }
 
-	@Override
-	public Account verify(String id, Credential credential) {
-		PasswordCredential passwordCredential = (PasswordCredential) credential;
+  @Override
+  public Account verify(String id, Credential credential) {
+    PasswordCredential passwordCredential = (PasswordCredential) credential;
 
-		try {
-			User user = repository.authenticate(id, passwordCredential.getPassword());
-			if (logger.isDebugEnabled()) {
-				logger.debug("User {} logged", user);
-			}
+    try {
+      User user = repository.authenticate(id, passwordCredential.getPassword());
+      if(logger.isDebugEnabled()) {
+        logger.debug("User {} logged", user);
+      }
 
-			return new UserPrincipal(user.id, user.username, User.ROLES);
-		} catch (UserNotFoundException e) {
-			if (logger.isInfoEnabled()) {
-				logger.info("Login failed", e);
-			}
-		}
-		
-		return null;
-	}
+      return new UserPrincipal(user.id, user.username, User.ROLES);
+    } catch (UserNotFoundException e) {
+      if(logger.isInfoEnabled()) {
+        logger.info("Login failed", e);
+      }
+    }
 
-	@Override
-	public Account verify(Credential credential) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("verify credential called - nothing to do");
-		}
+    return null;
+  }
 
-		return null;
-	}
+  @Override
+  public Account verify(Credential credential) {
+    if(logger.isDebugEnabled()) {
+      logger.debug("verify credential called - nothing to do");
+    }
+
+    return null;
+  }
 }

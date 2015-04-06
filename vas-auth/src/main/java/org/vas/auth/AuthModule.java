@@ -11,13 +11,13 @@ import com.google.inject.Module;
 
 public class AuthModule extends AbstractModule implements ModuleDescriptor {
 
-	@Override
-	protected void configure() {
-		bind(IdentityManager.class).to(RepositoryIdentityManager.class);
-	}
+  @Override
+  protected void configure() {
+    bind(IdentityManager.class).to(RepositoryIdentityManager.class);
+  }
 
-	@Override
+  @Override
   public Module module(Properties properties) {
-	  return this;
+    return this;
   }
 }

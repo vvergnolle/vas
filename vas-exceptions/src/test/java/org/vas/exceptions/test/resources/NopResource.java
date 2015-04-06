@@ -9,8 +9,8 @@ import org.vas.jaxrs.VasResource;
 @Path("/nop")
 public class NopResource extends VasResource {
 
-	@GET
-	public Response invoke() {
-		throw new UnsupportedOperationException();
-	}
+  @GET
+  public Response invoke() {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -8,8 +8,8 @@ import org.vas.jaxrs.stations.around.resource.StationsAroundResource;
 
 public class StationsAroundApplication extends VasApplication {
 
-	@Override
-	protected List<Object> resources() {
-	  return Arrays.asList(new StationsAroundResource());
-	}
+  @Override
+  protected List<Object> resources() {
+    return Arrays.asList(new StationsAroundResource());
+  }
 }

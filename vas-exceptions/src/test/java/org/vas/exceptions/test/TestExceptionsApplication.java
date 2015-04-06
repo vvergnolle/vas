@@ -8,8 +8,8 @@ import org.vas.jaxrs.VasApplication;
 
 public class TestExceptionsApplication extends VasApplication {
 
-	@Override
+  @Override
   protected List<Object> resources() {
-	  return Arrays.asList(new NopResource());
+    return Arrays.asList(new NopResource());
   }
 }

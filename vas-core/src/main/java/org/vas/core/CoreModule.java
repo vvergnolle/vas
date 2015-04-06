@@ -11,33 +11,32 @@ import com.google.inject.Module;
 
 public class CoreModule extends AbstractModule implements ModuleDescriptor {
 
-	private static final String LOCALE = "vas.locale";
-	private static final String MESSAGES_LOCATION = "vas.messages";
-	private static final String DEFAULT_MESSAGES = "locales/messages";
+  private static final String LOCALE = "vas.locale";
+  private static final String MESSAGES_LOCATION = "vas.messages";
+  private static final String DEFAULT_MESSAGES = "locales/messages";
 
-	protected Properties properties;
+  protected Properties properties;
 
-	@Override
-	protected void configure() {
-		bind(EventBus.class).asEagerSingleton();
-		bind(MessageHelper.class).toInstance(createMessageHelper());
-	}
+  @Override
+  protected void configure() {
+    bind(EventBus.class).asEagerSingleton();
+    bind(MessageHelper.class).toInstance(createMessageHelper());
+  }
 
-	protected MessageHelper createMessageHelper() {
-		String messagesLocation = properties.getProperty(MESSAGES_LOCATION, DEFAULT_MESSAGES);
-		String preferredLocale = properties.getProperty(LOCALE);
+  protected MessageHelper createMessageHelper() {
+    String messagesLocation = properties.getProperty(MESSAGES_LOCATION, DEFAULT_MESSAGES);
+    String preferredLocale = properties.getProperty(LOCALE);
 
-		if(preferredLocale == null || preferredLocale.isEmpty()) {
-			return new ResourceBundleMessageHelper(messagesLocation);
-		}
-		else {
-			return new ResourceBundleMessageHelper(messagesLocation, preferredLocale);
-		}
-	}
+    if(preferredLocale == null || preferredLocale.isEmpty()) {
+      return new ResourceBundleMessageHelper(messagesLocation);
+    } else {
+      return new ResourceBundleMessageHelper(messagesLocation, preferredLocale);
+    }
+  }
 
-	@Override
-	public Module module(Properties properties) {
-		this.properties = properties;
-		return this;
-	}
+  @Override
+  public Module module(Properties properties) {
+    this.properties = properties;
+    return this;
+  }
 }

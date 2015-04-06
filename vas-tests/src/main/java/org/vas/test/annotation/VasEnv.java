@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface VasEnv {
-	
-	String propertiesLocation() default "vas.conf";
+
+  String propertiesLocation() default "vas.conf";
 }

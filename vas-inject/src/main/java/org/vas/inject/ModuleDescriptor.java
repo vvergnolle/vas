@@ -5,6 +5,6 @@ import java.util.Properties;
 import com.google.inject.Module;
 
 public interface ModuleDescriptor {
-	
-	Module module(Properties properties);
+
+  Module module(Properties properties);
 }

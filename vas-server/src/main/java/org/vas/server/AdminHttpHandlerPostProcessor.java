@@ -20,55 +20,46 @@ import ch.qos.logback.classic.ViewStatusMessagesServlet;
  */
 public class AdminHttpHandlerPostProcessor implements HttpHandlerPostProcessor {
 
-	@Override
-	public void postProcess(BootContext context) {
-		ServletContainer servletContainer = Servlets.defaultContainer();
+  @Override
+  public void postProcess(BootContext context) {
+    ServletContainer servletContainer = Servlets.defaultContainer();
 
-		deployLogs(context, servletContainer);
-		deployJaxrs(context);
-	}
-
-	protected void deployLogs(BootContext context, ServletContainer servletContainer) {
-	  String adminLogs = context.properties().getProperty("vas.admin.logs", "false");
-		if(Boolean.valueOf(adminLogs)) {
-			DeploymentInfo deploymentInfo = Servlets
-			    .deployment()
-			    .setContextPath("/")
-			    .setDeploymentName("logback.war")
-			    .setClassLoader(getClass().getClassLoader())
-			    .addServlet(
-		        Servlets
-		        	.servlet("logback", ViewStatusMessagesServlet.class)
-		        	.setEnabled(true)
-		        	.setAsyncSupported(true)
-		          .setLoadOnStartup(1)
-		          .addMappings("/")
-			     );
-
-			DeploymentManager deploymentManager = servletContainer.addDeployment(deploymentInfo);
-			deploymentManager.deploy();
-
-			try {
-				context.pathHandler().addPrefixPath("/admin/logs", deploymentManager.start());
-			} catch (ServletException e) {
-				throw new RuntimeException(e);
-			}
-		}
+    deployLogs(context, servletContainer);
+    deployJaxrs(context);
   }
 
-	protected void deployJaxrs(BootContext context) {
-	  String adminJaxrs = context.properties().getProperty("vas.admin.jaxrs", "false");
-		if(Boolean.valueOf(adminJaxrs)) {
-			DeploymentInfo deploymentInfo = context.deploymentInfo();
+  protected void deployLogs(BootContext context, ServletContainer servletContainer) {
+    String adminLogs = context.properties().getProperty("vas.admin.logs", "false");
+    if(Boolean.valueOf(adminLogs)) {
+      DeploymentInfo deploymentInfo = Servlets
+        .deployment()
+        .setContextPath("/")
+        .setDeploymentName("logback.war")
+        .setClassLoader(getClass().getClassLoader())
+        .addServlet(
+          Servlets.servlet("logback", ViewStatusMessagesServlet.class).setEnabled(true).setAsyncSupported(true)
+            .setLoadOnStartup(1).addMappings("/"));
 
-			ServletInfo servletInfo = Servlets
-	     	.servlet("admin-jaxrs", AdminServlet.class)
-	     	.setEnabled(true)
-	     	.setAsyncSupported(true)
-	      .setLoadOnStartup(1)
-	      .addMappings("/admin/jaxrs");
-			 
-			 deploymentInfo.addServlet(servletInfo);
-		}
+      DeploymentManager deploymentManager = servletContainer.addDeployment(deploymentInfo);
+      deploymentManager.deploy();
+
+      try {
+        context.pathHandler().addPrefixPath("/admin/logs", deploymentManager.start());
+      } catch (ServletException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  protected void deployJaxrs(BootContext context) {
+    String adminJaxrs = context.properties().getProperty("vas.admin.jaxrs", "false");
+    if(Boolean.valueOf(adminJaxrs)) {
+      DeploymentInfo deploymentInfo = context.deploymentInfo();
+
+      ServletInfo servletInfo = Servlets.servlet("admin-jaxrs", AdminServlet.class).setEnabled(true)
+        .setAsyncSupported(true).setLoadOnStartup(1).addMappings("/admin/jaxrs");
+
+      deploymentInfo.addServlet(servletInfo);
+    }
   }
 }

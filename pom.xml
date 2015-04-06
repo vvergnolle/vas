@@ -12,6 +12,13 @@
     <version.undertow>1.2.0.Beta10</version.undertow>
     <version.guava>18.0</version.guava>
     <version.testng>6.8.21</version.testng>
+    <version.assertj>2.0.0</version.assertj>
+    <version.logback>1.1.2</version.logback>
+    <version.slf4j>1.7.6</version.slf4j>
+    <version.commons-io>2.4</version.commons-io>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <modules>
@@ -38,34 +45,23 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>2.0.0</version>
+      <version>${version.assertj}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.1.2</version>
+      <version>${version.logback}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jul-to-slf4j</artifactId>
-      <version>1.7.6</version>
-    </dependency>
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>${version.testng}</version>
-      <scope>test</scope>
+      <version>${version.slf4j}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>1.10</version>
+      <version>${version.commons-io}</version>
     </dependency>
     <dependency>
       <groupId>io.undertow</groupId>
@@ -77,31 +73,39 @@
       <artifactId>guava</artifactId>
       <version>${version.guava}</version>
     </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${version.testng}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
+    <!-- <resources>
+      <resource>
+        <directory>codequality</directory>
+      </resource>
+    </resources>-->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.15</version>
         <executions>
           <execution>
-            <phase>package</phase>
+            <phase>test</phase>
             <goals>
-              <goal>shade</goal>
+              <goal>check</goal>
             </goals>
-            <configuration>
-              <transformers>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>org.vas.boot.Main</mainClass>
-                </transformer>
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-              </transformers>
-            </configuration>
           </execution>
         </executions>
+        <configuration>
+          <configLocation>codequality/checkstyle.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+        </configuration>
       </plugin>
     </plugins>
   </build>

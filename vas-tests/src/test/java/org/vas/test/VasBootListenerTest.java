@@ -11,27 +11,27 @@ import org.vas.launcher.Vas;
 
 public class VasBootListenerTest extends AbstractVasServerTest {
 
-	@Inject
-	Vas vas;
+  @Inject
+  Vas vas;
 
-	@Inject
-	Env env;
+  @Inject
+  Env env;
 
-	@Inject
-	ServerConf conf;
+  @Inject
+  ServerConf conf;
 
-	@Test
-	public void itShouldHaveVas() {
-		assertThat(vas).as("Vas shouldn't be null").isNotNull();
-	}
+  @Test
+  public void itShouldHaveVas() {
+    assertThat(vas).as("Vas shouldn't be null").isNotNull();
+  }
 
-	@Test
-	public void itShouldHaveEnv() {
-		assertThat(env).as("Env shouldn't be null").isNotNull();
-	}
+  @Test
+  public void itShouldHaveEnv() {
+    assertThat(env).as("Env shouldn't be null").isNotNull();
+  }
 
-	@Test
-	public void itShouldHaveServerConf() {
-		assertThat(conf).as("ServerConf shouldn't be null").isNotNull();
-	}
+  @Test
+  public void itShouldHaveServerConf() {
+    assertThat(conf).as("ServerConf shouldn't be null").isNotNull();
+  }
 }

@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface HttpResource {
 
-	String uri();
-	
-	/**
-	 * The http method
-	 */
-	String method() default "GET";
+  String uri();
+
+  /**
+   * The http method
+   */
+  String method() default "GET";
 }

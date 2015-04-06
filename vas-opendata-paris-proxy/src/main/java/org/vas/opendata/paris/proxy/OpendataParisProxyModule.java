@@ -15,14 +15,16 @@ import com.google.inject.Module;
 
 public class OpendataParisProxyModule extends AbstractModule implements ModuleDescriptor {
 
-	@Override
-	protected void configure() {
-		bind(VelibOpendataParisWs.class).toInstance(createEndpoint(VelibOpendataParisWs.class, new VelibCacheInterceptor()));
-		bind(AutolibOpendataParisWs.class).toInstance(createEndpoint(AutolibOpendataParisWs.class, new AutolibCacheInterceptor()));
-	}
+  @Override
+  protected void configure() {
+    bind(VelibOpendataParisWs.class)
+      .toInstance(createEndpoint(VelibOpendataParisWs.class, new VelibCacheInterceptor()));
+    bind(AutolibOpendataParisWs.class).toInstance(
+      createEndpoint(AutolibOpendataParisWs.class, new AutolibCacheInterceptor()));
+  }
 
-	@Override
-	public Module module(Properties properties) {
-	  return this;
-	}
+  @Override
+  public Module module(Properties properties) {
+    return this;
+  }
 }

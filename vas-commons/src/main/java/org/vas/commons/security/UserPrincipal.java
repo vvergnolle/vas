@@ -6,35 +6,36 @@ import java.security.Principal;
 import java.util.Set;
 
 /**
- * Java {@link Principal} that will be used to hold our logged user informations.
+ * Java {@link Principal} that will be used to hold our logged user
+ * informations.
  * 
  * Instances of this class will be used in servlets or handlers.
  */
 public class UserPrincipal implements Account, Principal {
-	
-	public final int id;
-	public final String user;
-	protected Set<String> roles;
-	
-	public UserPrincipal(int id, String user, Set<String> roles) {
-	  super();
-	  this.id = id;
-	  this.user = user;
-	  this.roles = roles;
+
+  public final int id;
+  public final String user;
+  protected Set<String> roles;
+
+  public UserPrincipal(int id, String user, Set<String> roles) {
+    super();
+    this.id = id;
+    this.user = user;
+    this.roles = roles;
   }
 
-	@Override
+  @Override
   public Principal getPrincipal() {
-	  return this;
+    return this;
   }
 
-	@Override
+  @Override
   public Set<String> getRoles() {
-	  return roles;
+    return roles;
   }
 
-	@Override
+  @Override
   public String getName() {
-	  return user;
+    return user;
   }
 }

@@ -2,7 +2,7 @@ package org.vas.domain.repository;
 
 public interface Repositories {
 
-	UserRepository user();
+  UserRepository user();
 
-	AddressRepository address();
+  AddressRepository address();
 }

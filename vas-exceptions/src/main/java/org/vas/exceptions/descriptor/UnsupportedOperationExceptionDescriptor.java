@@ -9,22 +9,20 @@ import org.vas.commons.bean.MsgBean;
 import org.vas.jaxrs.JaxrsExceptionDescriptor;
 
 public class UnsupportedOperationExceptionDescriptor implements JaxrsExceptionDescriptor,
-    Function<Exception, ResponseBuilder> {
+  Function<Exception, ResponseBuilder> {
 
-	@Override
-	public Class<? extends Exception> exception() {
-		return UnsupportedOperationException.class;
-	}
+  @Override
+  public Class<? extends Exception> exception() {
+    return UnsupportedOperationException.class;
+  }
 
-	@Override
-	public Function<Exception, ResponseBuilder> function() {
-		return this;
-	}
+  @Override
+  public Function<Exception, ResponseBuilder> function() {
+    return this;
+  }
 
-	@Override
-	public ResponseBuilder apply(Exception t) {
-		return Response
-			.status(501)
-			.entity(MsgBean.of(t.getMessage()));
-	}
+  @Override
+  public ResponseBuilder apply(Exception t) {
+    return Response.status(501).entity(MsgBean.of(t.getMessage()));
+  }
 }

@@ -8,17 +8,17 @@ import com.google.inject.AbstractModule;
 
 public class TestModule extends AbstractModule {
 
-	protected Vas vas;
-	
-	public TestModule(Vas vas) {
-		super();
-		this.vas = vas;
-	}
+  protected Vas vas;
 
-	@Override
-	protected void configure() {
-		bind(Vas.class).toInstance(vas);
-		bind(Env.class).toInstance(vas.env());
-		bind(ServerConf.class).toInstance(vas.conf());
-	}
+  public TestModule(Vas vas) {
+    super();
+    this.vas = vas;
+  }
+
+  @Override
+  protected void configure() {
+    bind(Vas.class).toInstance(vas);
+    bind(Env.class).toInstance(vas.env());
+    bind(ServerConf.class).toInstance(vas.conf());
+  }
 }

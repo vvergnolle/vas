@@ -13,9 +13,9 @@ import org.vas.jaxrs.VasApplication;
  */
 public class SharedProviders {
 
-	public static List<Class<?>> CLASSES = new ArrayList<>(1);
+  public static List<Class<?>> CLASSES = new ArrayList<>(1);
 
-	static {
-		CLASSES.add(JaxrsExceptionProvider.class);
-	}
+  static {
+    CLASSES.add(JaxrsExceptionProvider.class);
+  }
 }

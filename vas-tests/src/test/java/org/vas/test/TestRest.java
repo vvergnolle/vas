@@ -7,9 +7,9 @@ import org.vas.test.rest.Response;
 
 public class TestRest extends AbstractVasRestTest {
 
-	@Test
-	public void itShouldQueryGoogle() {
-		Response<String> response = rest.get("https://google.fr", String.class);
-		assertThat(response.content).as("The google content shouldn't be empty").isNotEmpty();
-	}
+  @Test
+  public void itShouldQueryGoogle() {
+    Response<String> response = rest.get("https://google.fr", String.class);
+    assertThat(response.content).as("The google content shouldn't be empty").isNotEmpty();
+  }
 }

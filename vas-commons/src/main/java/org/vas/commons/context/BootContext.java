@@ -26,85 +26,85 @@ import org.vas.commons.http.HttpHandlerPostProcessor;
  */
 public interface BootContext {
 
-	/**
-	 * Bind an exception to an HTTP status. The exception message will not be
-	 * flushed in the response.
-	 */
-	void bindException(Class<? extends Throwable> exception, int status);
+  /**
+   * Bind an exception to an HTTP status. The exception message will not be
+   * flushed in the response.
+   */
+  void bindException(Class<? extends Throwable> exception, int status);
 
-	/**
-	 * Bind an exception to an HTTP status and force the exception message to
-	 * flushed in the response
-	 */
-	void bindException(Class<? extends Throwable> exception, int status, boolean flushMessage);
+  /**
+   * Bind an exception to an HTTP status and force the exception message to
+   * flushed in the response
+   */
+  void bindException(Class<? extends Throwable> exception, int status, boolean flushMessage);
 
-	/**
-	 * Bind an exception to a function. Each time the exception will be raised,
-	 * the responseBody function will be invoked.
-	 */
-	void bindException(Class<? extends Throwable> exception, HttpHandler handler);
+  /**
+   * Bind an exception to a function. Each time the exception will be raised,
+   * the responseBody function will be invoked.
+   */
+  void bindException(Class<? extends Throwable> exception, HttpHandler handler);
 
-	/**
-	 * Add this header for each request
-	 */
-	void addHeader(String header, String value);
+  /**
+   * Add this header for each request
+   */
+  void addHeader(String header, String value);
 
-	/**
-	 * More dynamic way to add an header for each request
-	 */
-	void addHeader(String header, ExchangeAttribute value);
+  /**
+   * More dynamic way to add an header for each request
+   */
+  void addHeader(String header, ExchangeAttribute value);
 
-	/**
-	 * The application properties
-	 */
-	Properties properties();
+  /**
+   * The application properties
+   */
+  Properties properties();
 
-	/**
-	 * Get a class that live in the underlaying services container
-	 */
-	<T> T getService(Class<T> klass);
+  /**
+   * Get a class that live in the underlaying services container
+   */
+  <T> T getService(Class<T> klass);
 
-	/**
-	 * Inject dependencies of an instance
-	 */
-	void inject(Object object);
+  /**
+   * Inject dependencies of an instance
+   */
+  void inject(Object object);
 
-	/**
-	 * Default http handler based on the uri
-	 */
-	PathHandler pathHandler();
+  /**
+   * Default http handler based on the uri
+   */
+  PathHandler pathHandler();
 
-	/**
-	 * Register an handler with a predicate
-	 * 
-	 * <br/>
-	 * 
-	 * The priority must be a valid positive integer that will prioritize your
-	 * predicate.
-	 * 
-	 * @see PredicatedHandler
-	 * @see Handlers#predicate(Predicate, HttpHandler, HttpHandler)
-	 */
-	void addPredicate(int priority, Predicate predicate, HttpHandler truePredicate);
+  /**
+   * Register an handler with a predicate
+   * 
+   * <br/>
+   * 
+   * The priority must be a valid positive integer that will prioritize your
+   * predicate.
+   * 
+   * @see PredicatedHandler
+   * @see Handlers#predicate(Predicate, HttpHandler, HttpHandler)
+   */
+  void addPredicate(int priority, Predicate predicate, HttpHandler truePredicate);
 
-	/**
-	 * The same as {@link BootContext#addPredicate(Predicate, HttpHandler)} but
-	 * the predicate will be wrapped by {@link Predicates#not(Predicate)}
-	 */
-	void addNotPredicate(int priority, Predicate predicate, HttpHandler truePredicate);
+  /**
+   * The same as {@link BootContext#addPredicate(Predicate, HttpHandler)} but
+   * the predicate will be wrapped by {@link Predicates#not(Predicate)}
+   */
+  void addNotPredicate(int priority, Predicate predicate, HttpHandler truePredicate);
 
-	/**
-	 * The application default web descriptor.
-	 * 
-	 * <br/>
-	 * 
-	 * For more informations on how to use it, look the Undertow <a
-	 * href="http://undertow.io/documentation/index.html">documentation</a>.
-	 * 
-	 * @see Servlets
-	 * @see DeploymentManager
-	 * @see ServletInfo
-	 * @see DeploymentInfo
-	 */
-	DeploymentInfo deploymentInfo();
+  /**
+   * The application default web descriptor.
+   * 
+   * <br/>
+   * 
+   * For more informations on how to use it, look the Undertow <a
+   * href="http://undertow.io/documentation/index.html">documentation</a>.
+   * 
+   * @see Servlets
+   * @see DeploymentManager
+   * @see ServletInfo
+   * @see DeploymentInfo
+   */
+  DeploymentInfo deploymentInfo();
 }

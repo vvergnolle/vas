@@ -9,13 +9,11 @@ import org.vas.test.rest.Response;
 
 public class TestJaxrs extends AbstractVasRestTest {
 
-	@Test
-	public void itShould() {
-		Response<String> response = vasRest
-			.get("/rest/test/jaxrs/foobar", String.class);
+  @Test
+  public void itShould() {
+    Response<String> response = vasRest.get("/rest/test/jaxrs/foobar", String.class);
 
-		assertThat(response.content)
-			.as("The content should be equals to '" + FooBarResource.STRING + "'")
-			.isEqualTo(FooBarResource.STRING);
-	}
+    assertThat(response.content).as("The content should be equals to '" + FooBarResource.STRING + "'").isEqualTo(
+      FooBarResource.STRING);
+  }
 }

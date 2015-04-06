@@ -5,17 +5,21 @@ import java.util.Properties;
 import org.vas.inject.Services;
 
 public interface Vas {
-	ServerConf conf();
-	Env env();
-	
-	void start() throws Exception;
-	void start(Env env) throws Exception;
+  ServerConf conf();
 
-	void stop() throws Exception;
+  Env env();
 
-	void restart() throws Exception;
-	void restart(Env env) throws Exception;
+  void start() throws Exception;
 
-	Properties properties();
-	Services services();
+  void start(Env env) throws Exception;
+
+  void stop() throws Exception;
+
+  void restart() throws Exception;
+
+  void restart(Env env) throws Exception;
+
+  Properties properties();
+
+  Services services();
 }

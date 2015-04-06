@@ -15,39 +15,39 @@ import org.vas.test.AbstractVasRuntimeTest;
 
 public abstract class AbstractAddressTest extends AbstractVasRuntimeTest {
 
-	@Inject
-	AddressRepository addressRepository;
+  @Inject
+  AddressRepository addressRepository;
 
-	@Inject
-	UserRepository userRepository;
-	
-	@Test
-	public void itShouldHaveAddressRepository() {
-		assertThat(addressRepository).as("The address repository shouldn't be null").isNotNull();
-	}
-	
-	@Test
-	public void itShouldHaveUserRepository() {
-		assertThat(userRepository).as("The user repository shouldn't be null").isNotNull();
-	}
+  @Inject
+  UserRepository userRepository;
 
-	@AfterMethod
-	public void clearContext() {
-		try {
-			int removed = addressRepository.deleteBuilder().delete();
-			if(logger.isDebugEnabled()) {
-				logger.debug("Clear context - remove {} addresses to keep independent the method context call", removed);
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+  @Test
+  public void itShouldHaveAddressRepository() {
+    assertThat(addressRepository).as("The address repository shouldn't be null").isNotNull();
+  }
 
-	protected User testUser() {
-		try {
-			return userRepository.queryForId(1);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+  @Test
+  public void itShouldHaveUserRepository() {
+    assertThat(userRepository).as("The user repository shouldn't be null").isNotNull();
+  }
+
+  @AfterMethod
+  public void clearContext() {
+    try {
+      int removed = addressRepository.deleteBuilder().delete();
+      if(logger.isDebugEnabled()) {
+        logger.debug("Clear context - remove {} addresses to keep independent the method context call", removed);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  protected User testUser() {
+    try {
+      return userRepository.queryForId(1);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

@@ -6,18 +6,18 @@ import org.vas.jaxrs.JaxrsDescriptor;
 
 public class AddressJaxrsDescriptor implements JaxrsDescriptor {
 
-	@Override
-	public String id() {
-	  return "address";
-	}
-	
-	@Override
-  public String mapping() {
-	  return "/rest/address/*";
+  @Override
+  public String id() {
+    return "address";
   }
-	
-	@Override
+
+  @Override
+  public String mapping() {
+    return "/rest/address/*";
+  }
+
+  @Override
   public Class<? extends Application> applicationClass() {
-	  return AddressApplication.class;
+    return AddressApplication.class;
   }
 }

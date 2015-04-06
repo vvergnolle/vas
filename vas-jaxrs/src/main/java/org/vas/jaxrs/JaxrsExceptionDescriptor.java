@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 public interface JaxrsExceptionDescriptor {
 
-	Class<? extends Exception> exception();
+  Class<? extends Exception> exception();
 
-	Function<Exception, ResponseBuilder> function();
+  Function<Exception, ResponseBuilder> function();
 }

@@ -8,19 +8,19 @@ import com.google.inject.Inject;
 
 public final class RepositoriesImpl implements Repositories {
 
-	@Inject
-	UserRepository userRepository;
-	
-	@Inject
-	AddressRepository addressRepository;
-	
-	@Override
+  @Inject
+  UserRepository userRepository;
+
+  @Inject
+  AddressRepository addressRepository;
+
+  @Override
   public UserRepository user() {
-	  return userRepository;
+    return userRepository;
   }
 
-	@Override
+  @Override
   public AddressRepository address() {
-	  return addressRepository;
+    return addressRepository;
   }
 }

@@ -24,67 +24,62 @@ import org.vas.opendata.paris.client.VelibOpendataParisWs;
 @Path("/")
 public class AddressResource extends VasResource {
 
-	@Inject
-	protected AutolibOpendataParisWs autolibWs;
+  @Inject
+  protected AutolibOpendataParisWs autolibWs;
 
-	@Inject
-	protected VelibOpendataParisWs velibWs;
+  @Inject
+  protected VelibOpendataParisWs velibWs;
 
-	@GET
-	public Response get() {
-		return ok(currentUser().addresses);
-	}
-	
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response create(
-		@FormParam("label") String label,
-		@FormParam("latitude") float lat,
-		@FormParam("longitude") float lng) {
+  @GET
+  public Response get() {
+    return ok(currentUser().addresses);
+  }
 
-		Address address = addressService.create(label, lat, lng);
-		address.user = currentUser();
+  @POST
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public Response create(@FormParam("label") String label, @FormParam("latitude") float lat,
+    @FormParam("longitude") float lng) {
 
-		addressService.save(address);
-		return created(address.id);
-	}
-	
-	@PUT
-	public Response update(
-			@FormParam("id") int id,
-			@FormParam("label") @DefaultValue("") String label,
-			@FormParam("latitude") @DefaultValue("0") float lat,
-			@FormParam("longitude") @DefaultValue("0") float lng) {
+    Address address = addressService.create(label, lat, lng);
+    address.user = currentUser();
 
-		Address address = addressService.fecth(id);
-		boolean changes = false;
-		
-		if(!label.isEmpty()) {
-			address.label = label;
-			changes = true;
-		}
-		
-		if(lat > 0) {
-			address.latitude = lat;
-			changes = true;
-		}
-		
-		if(lng > 0) {
-			address.longitude = lng;
-			changes = true;
-		}
-		
-		if(changes) {
-			addressService.save(address);
-		}
-			
-		return ok();
-	}
-	
-	@DELETE
-	@Path("{id}")
-	public Response delete(@PathParam("id") int id) {
-		addressService.remove(id);
-		return ok();
-	}
+    addressService.save(address);
+    return created(address.id);
+  }
+
+  @PUT
+  public Response update(@FormParam("id") int id, @FormParam("label") @DefaultValue("") String label,
+    @FormParam("latitude") @DefaultValue("0") float lat, @FormParam("longitude") @DefaultValue("0") float lng) {
+
+    Address address = addressService.fecth(id);
+    boolean changes = false;
+
+    if(!label.isEmpty()) {
+      address.label = label;
+      changes = true;
+    }
+
+    if(lat > 0) {
+      address.latitude = lat;
+      changes = true;
+    }
+
+    if(lng > 0) {
+      address.longitude = lng;
+      changes = true;
+    }
+
+    if(changes) {
+      addressService.save(address);
+    }
+
+    return ok();
+  }
+
+  @DELETE
+  @Path("{id}")
+  public Response delete(@PathParam("id") int id) {
+    addressService.remove(id);
+    return ok();
+  }
 }

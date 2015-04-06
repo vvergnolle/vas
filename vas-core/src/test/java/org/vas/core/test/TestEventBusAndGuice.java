@@ -9,24 +9,24 @@ import org.testng.annotations.Test;
 
 import com.google.common.eventbus.EventBus;
 
-@Guice(modules=TestModule.class)
+@Guice(modules = TestModule.class)
 public class TestEventBusAndGuice {
 
-	@Inject
-	EventBus eventBus;
-	
-	@Inject
-	CountEventListener listener;
+  @Inject
+  EventBus eventBus;
 
-	@Test
-	public void itShouldCountEventPost() {
-		eventBus.post(new Event());
-		eventBus.post(new SubEvent());
-		eventBus.post(new SubEvent());
-		eventBus.post(new Event());
+  @Inject
+  CountEventListener listener;
 
-		assertThat(listener.count).as("count should be equals to 4").isEqualTo(4);
+  @Test
+  public void itShouldCountEventPost() {
+    eventBus.post(new Event());
+    eventBus.post(new SubEvent());
+    eventBus.post(new SubEvent());
+    eventBus.post(new Event());
 
-		eventBus.unregister(listener);
-	}
+    assertThat(listener.count).as("count should be equals to 4").isEqualTo(4);
+
+    eventBus.unregister(listener);
+  }
 }

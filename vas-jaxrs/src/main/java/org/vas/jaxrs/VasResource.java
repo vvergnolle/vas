@@ -24,34 +24,34 @@ import org.vas.domain.repository.UserService;
 @Produces(MediaType.APPLICATION_JSON)
 public abstract class VasResource {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@Inject
-	protected UserService userService;
-	
-	@Inject
-	protected AddressService addressService;
-	
-	@Context
-	protected SecurityContext securityContext;
-	
-	@GET
-	@Path("ready")
-	public Response ready() {
-		return ok();
-	}
-	
-	protected User currentUser() {
-		Principal principal = securityContext.getUserPrincipal();
-		UserPrincipal user = (UserPrincipal) principal;
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-		return userService.fetch(user.id);
-	}
-	
-	protected UserBean currentUserBean() {
-		Principal principal = securityContext.getUserPrincipal();
-		UserPrincipal user = (UserPrincipal) principal;
+  @Inject
+  protected UserService userService;
 
-		return UserBean.of(user);
-	}
+  @Inject
+  protected AddressService addressService;
+
+  @Context
+  protected SecurityContext securityContext;
+
+  @GET
+  @Path("ready")
+  public Response ready() {
+    return ok();
+  }
+
+  protected User currentUser() {
+    Principal principal = securityContext.getUserPrincipal();
+    UserPrincipal user = (UserPrincipal) principal;
+
+    return userService.fetch(user.id);
+  }
+
+  protected UserBean currentUserBean() {
+    Principal principal = securityContext.getUserPrincipal();
+    UserPrincipal user = (UserPrincipal) principal;
+
+    return UserBean.of(user);
+  }
 }

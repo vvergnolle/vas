@@ -1,2 +1,2 @@
-org.vas.exceptions.descriptor.SQLExceptionDescriptor
+org.vas.exceptions.descriptor.SqlExceptionDescriptor
 org.vas.exceptions.descriptor.UnsupportedOperationExceptionDescriptor

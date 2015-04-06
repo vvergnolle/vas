@@ -6,18 +6,18 @@ import org.vas.jaxrs.JaxrsDescriptor;
 
 public class TestJaxrsDescriptor implements JaxrsDescriptor {
 
-	@Override
-	public String id() {
-	  return "test-exceptions";
-	}
-	
-	@Override
-	public Class<? extends Application> applicationClass() {
-	  return TestExceptionsApplication.class;
-	}
+  @Override
+  public String id() {
+    return "test-exceptions";
+  }
 
-	@Override
-	public String mapping() {
-	  return "/rest/test/exceptions/*";
-	}
+  @Override
+  public Class<? extends Application> applicationClass() {
+    return TestExceptionsApplication.class;
+  }
+
+  @Override
+  public String mapping() {
+    return "/rest/test/exceptions/*";
+  }
 }

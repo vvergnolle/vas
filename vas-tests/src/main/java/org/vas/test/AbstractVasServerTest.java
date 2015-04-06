@@ -11,16 +11,14 @@ import org.vas.test.annotation.VasBoot;
 import org.vas.test.listener.VasServerTestListener;
 
 @VasBoot
-@Listeners({
-	VasServerTestListener.class
-})
+@Listeners(VasServerTestListener.class)
 public abstract class AbstractVasServerTest {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Inject
-	protected ServerConf conf;
-	
-	@Inject
-	protected Env env;
+  @Inject
+  protected ServerConf conf;
+
+  @Inject
+  protected Env env;
 }

@@ -9,8 +9,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface VasConf {
 
-	int port() default 8080;
-	int ioThreads() default 4;
-	int bufferSize() default 8096;
-	String host() default "localhost";
+  int port() default 8080;
+
+  int ioThreads() default 4;
+
+  int bufferSize() default 8096;
+
+  String host() default "localhost";
 }

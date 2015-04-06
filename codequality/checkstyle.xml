@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+  <module name="Translation" />
+
+  <!-- Disallow tab in java, yaml and properties files -->
+  <module name="FileTabCharacter">
+    <property name="fileExtensions" value="yaml,java,properties" />
+  </module>
+
+  <!-- Avoid duplicated properties -->
+  <module name="UniqueProperties">
+    <property name="fileExtensions" value="conf,cfg,properties" />
+  </module>
+
+  <!-- Tree -->
+  <module name="TreeWalker">
+    <!-- Check only java files -->
+    <property name="fileExtensions" value="java" />
+    <property name="tabWidth" value="2" />
+
+    <!-- Basic check -->
+    <module name="AvoidStarImport" />
+    <module name="SuperFinalize" />
+    <module name="NestedTryDepth">
+      <property name="max" value="2" />
+    </module>
+    <module name="PackageDeclaration" />
+    <module name="ReturnCount">
+      <property name="max" value="4" />
+      <property name="format" value="^equals|lookup*|search*|find*$" />
+    </module>
+    <module name="SimplifyBooleanExpression" />
+    <module name="ModifierOrder" />
+    <module name="IllegalCatch">
+      <property name="illegalClassNames" value="java.lang.Throwable,java.lang.RuntimeException" />
+    </module>
+    <module name="DefaultComesLast" />
+    <module name="EqualsAvoidNull" />
+    <module name="FinalClass" />
+    <module name="MultipleVariableDeclarations" />
+    <module name="OneStatementPerLine" />
+    <module name="NoFinalizer" />
+    <module name="ParameterNumber">
+      <property name="max" value="5" />
+    </module>
+
+    <!-- Basic format -->
+
+    <module name="LineLength">
+      <property name="max" value="120" />
+    </module>
+
+    <!-- Spaces -->
+
+    <module name="TypecastParenPad">
+      <property name="option" value="nospace" />
+    </module>
+
+    <module name="WhitespaceAfter">
+      <property name="tokens" value="COMMA, TYPECAST" />
+    </module>
+
+    <module name="ParenPad">
+      <property name="tokens" value="CTOR_CALL, METHOD_CALL,SUPER_CTOR_CALL" />
+      <property name="option" value="nospace" />
+    </module>
+
+    <module name="WhitespaceAround">
+      <property name="tokens"
+        value="EQUAL, GE, GT, LAND, LE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, SL, SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, TYPE_EXTENSION_AND, ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN, " />
+    </module>
+
+    <!-- Names -->
+
+    <module name="TypeName">
+      <property name="format" value="^[A-Z][a-z]+([A-Z][a-z]+)*$" />
+    </module>
+    <module name="ConstantName">
+      <property name="format" value="^[A-Z][A-Z]*(_[A-Z]+)*$" />
+    </module>
+    <module name="LocalFinalVariableName">
+      <property name="format" value="^[a-z]+([A-Z][a-z]+)*$" />
+    </module>
+    <module name="LocalVariableName">
+      <property name="format" value="^[a-z]+([A-Z][a-z]+)*$" />
+    </module>
+    <module name="MemberName">
+      <property name="format" value="^[a-z]+([A-Z][a-z]+)*$" />
+    </module>
+    <module name="MethodName">
+      <property name="format" value="^[a-z]+([A-Z][a-z]+)*$" />
+    </module>
+    <module name="PackageName">
+      <property name="format" value="^[a-z]+(\.[a-z]+)*$" />
+    </module>
+
+    <!-- No line wrap for package and import declaration -->
+    <module name="NoLineWrap">
+      <property name="tokens" value="PACKAGE_DEF, IMPORT" />
+    </module>
+
+    <!-- Check block that need braces -->
+    <module name="NeedBraces" />
+
+    <!-- Annotations -->
+
+    <module name="AnnotationUseStyle" />
+    <module name="AnnotationLocation">
+      <property name="allowSamelineSingleParameterlessAnnotation" value="false" />
+    </module>
+
+    <!-- Methods -->
+
+    <module name="MethodLength">
+      <property name="max" value="60" />
+    </module>
+
+  </module>
+</module>

@@ -10,15 +10,15 @@ import org.vas.domain.repository.UserService;
 
 public class UserServiceImpl implements UserService {
 
-	@Inject
-	UserRepository userRepository;
-	
-	@Override
-	public User fetch(int id) {
-	  try {
-	    return userRepository.queryForId(id);
+  @Inject
+  UserRepository userRepository;
+
+  @Override
+  public User fetch(int id) {
+    try {
+      return userRepository.queryForId(id);
     } catch (SQLException e) {
-    	throw new RuntimeException(e);
+      throw new RuntimeException(e);
     }
-	}
+  }
 }

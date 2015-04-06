@@ -11,17 +11,17 @@ import org.vas.test.AbstractVasRuntimeTest;
 
 public class TestUserService extends AbstractVasRuntimeTest {
 
-	@Inject
-	UserService userService;
+  @Inject
+  UserService userService;
 
-	@Test
-	public void itShouldHaveService() {
-		assertThat(userService).as("The user service shouldn't be null").isNotNull();
-	}
+  @Test
+  public void itShouldHaveService() {
+    assertThat(userService).as("The user service shouldn't be null").isNotNull();
+  }
 
-	@Test
-	public void itShouldFetchUser() {
-		User user = userService.fetch(1);
-		assertThat(user.username).as("The user username should be 'test'").isEqualTo("test");
-	}
+  @Test
+  public void itShouldFetchUser() {
+    User user = userService.fetch(1);
+    assertThat(user.username).as("The user username should be 'test'").isEqualTo("test");
+  }
 }

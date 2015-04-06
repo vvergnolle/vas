@@ -31,116 +31,114 @@ import org.vas.test.rest.TestRestModule;
  */
 public class VasServerTestListener implements ITestListener {
 
-	protected static final Object DEFAULT = new Object();
+  protected static final Object DEFAULT = new Object();
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	protected final Map<Object, Vas> servers = new HashMap<>();
-	protected Services defaultServiceContainer;
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
+  protected final Map<Object, Vas> servers = new HashMap<>();
+  protected Services defaultServiceContainer;
 
-	@Override
-	public void onStart(ITestContext context) {
-		Set<Object> instances = uniqInstances(context.getAllTestMethods());
-		if(logger.isTraceEnabled()) {
-			logger.trace("Instances {}", Arrays.asList(instances));
-		}
+  @Override
+  public void onStart(ITestContext context) {
+    Set<Object> instances = uniqInstances(context.getAllTestMethods());
+    if(logger.isTraceEnabled()) {
+      logger.trace("Instances {}", Arrays.asList(instances));
+    }
 
-		for (Object instance : instances) {
-			VasBoot vasBoot = vasBoot(instance);
-			if(vasBoot == null) {
-				if(logger.isDebugEnabled()) {
-					logger.debug("No @VasBoot for the test {} ... skip", instance.getClass());
-				}
-				continue;
-			}
+    for (Object instance : instances) {
+      VasBoot vasBoot = vasBoot(instance);
+      if(vasBoot == null) {
+        if(logger.isDebugEnabled()) {
+          logger.debug("No @VasBoot for the test {} ... skip", instance.getClass());
+        }
+        continue;
+      }
 
-			if(!vasBoot.custom()) {
-				checkDefaultVas();
-				defaultServiceContainer.inject(instance);
-				continue;
-			}
+      if(!vasBoot.custom()) {
+        checkDefaultVas();
+        defaultServiceContainer.inject(instance);
+        continue;
+      }
 
-			// Create custom vas
-			Env env = buildEnv(vasBoot);
-			ServerConf conf = buildConf(vasBoot.conf());
-			Vas vas = VasFactory.create(conf);
-			quiet(() -> vas.start(env));
+      // Create custom vas
+      Env env = buildEnv(vasBoot);
+      ServerConf conf = buildConf(vasBoot.conf());
+      Vas vas = VasFactory.create(conf);
+      quiet(() -> vas.start(env));
 
-			// Process injection
-			inject(vas, instance);
-		}
-	}
-
-	protected void inject(Vas vas, Object instance) {
-	  createServiceContainer(vas).inject(instance);
+      // Process injection
+      inject(vas, instance);
+    }
   }
 
-	protected void checkDefaultVas() {
-		Vas vas = servers.get(DEFAULT);
-		if(vas == null) {
-			buildDefaultVas();
-		}
-	}
-
-	protected void buildDefaultVas() {
-		Vas vas = VasFactory.create();
-		servers.put(DEFAULT, vas);
-		quiet(() -> vas.start());
-		defaultServiceContainer = createServiceContainer(vas);
-	}
-
-	protected Services createServiceContainer(Vas vas) {
-	  return vas
-	  	.services()
-	  	.child(new TestModule(vas), new TestRestModule());
+  protected void inject(Vas vas, Object instance) {
+    createServiceContainer(vas).inject(instance);
   }
 
-	protected Set<Object> uniqInstances(ITestNGMethod[] allTestMethods) {
-		Set<Object> instances = new HashSet<>();
-		for (ITestNGMethod method : allTestMethods) {
-			instances.add(method.getInstance());
-		}
+  protected void checkDefaultVas() {
+    Vas vas = servers.get(DEFAULT);
+    if(vas == null) {
+      buildDefaultVas();
+    }
+  }
 
-		return instances;
-	}
+  protected void buildDefaultVas() {
+    Vas vas = VasFactory.create();
+    servers.put(DEFAULT, vas);
+    quiet(() -> vas.start());
+    defaultServiceContainer = createServiceContainer(vas);
+  }
 
-	@Override
-	public void onFinish(ITestContext context) {
-		servers.forEach((testInstance, server) -> quiet(server::stop));
-		if(logger.isDebugEnabled()) {
-			logger.debug("Vas shutdown");
-		}
-	}
+  protected Services createServiceContainer(Vas vas) {
+    return vas.services().child(new TestModule(vas), new TestRestModule());
+  }
 
-	protected VasBoot vasBoot(Object testInstance) {
-		VasBoot vasBoot = null;
-		for (Class<?> klass = testInstance.getClass(); klass != Object.class && vasBoot == null; klass = klass
-		    .getSuperclass()) {
-			vasBoot = klass.getAnnotation(VasBoot.class);
-		}
+  protected Set<Object> uniqInstances(ITestNGMethod[] allTestMethods) {
+    Set<Object> instances = new HashSet<>();
+    for (ITestNGMethod method : allTestMethods) {
+      instances.add(method.getInstance());
+    }
 
-		return vasBoot;
-	}
+    return instances;
+  }
 
-	protected ServerConf buildConf(VasConf vasConf) {
-		return new ServerConf(vasConf.host(), vasConf.port(), vasConf.ioThreads(), vasConf.bufferSize());
-	}
+  @Override
+  public void onFinish(ITestContext context) {
+    servers.forEach((testInstance, server) -> quiet(server::stop));
+    if(logger.isDebugEnabled()) {
+      logger.debug("Vas shutdown");
+    }
+  }
 
-	protected Env buildEnv(VasBoot vasBoot) {
-		return new Env(vasBoot.env().propertiesLocation(), vasBoot.profile());
-	}
+  protected VasBoot vasBoot(Object testInstance) {
+    VasBoot vasBoot = null;
+    for (Class<?> klass = testInstance.getClass(); klass != Object.class && vasBoot == null; klass = klass
+      .getSuperclass()) {
+      vasBoot = klass.getAnnotation(VasBoot.class);
+    }
 
-	@Override
-	public void onTestStart(ITestResult result) {}
+    return vasBoot;
+  }
 
-	@Override
-	public void onTestSuccess(ITestResult result) {}
+  protected ServerConf buildConf(VasConf vasConf) {
+    return new ServerConf(vasConf.host(), vasConf.port(), vasConf.ioThreads(), vasConf.bufferSize());
+  }
 
-	@Override
-	public void onTestFailure(ITestResult result) {}
+  protected Env buildEnv(VasBoot vasBoot) {
+    return new Env(vasBoot.env().propertiesLocation(), vasBoot.profile());
+  }
 
-	@Override
-	public void onTestSkipped(ITestResult result) {}
+  @Override
+  public void onTestStart(ITestResult result) {}
 
-	@Override
-	public void onTestFailedButWithinSuccessPercentage(ITestResult result) {}
+  @Override
+  public void onTestSuccess(ITestResult result) {}
+
+  @Override
+  public void onTestFailure(ITestResult result) {}
+
+  @Override
+  public void onTestSkipped(ITestResult result) {}
+
+  @Override
+  public void onTestFailedButWithinSuccessPercentage(ITestResult result) {}
 }

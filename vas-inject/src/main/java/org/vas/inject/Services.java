@@ -7,12 +7,15 @@ import com.google.inject.Module;
 
 public interface Services {
 
-	<T> T get(Class<T> klass);
-	void inject(Object object);
+  <T> T get(Class<T> klass);
 
-	Services child(Module... modules);
-	Services child(Iterable<Module> modules);
+  void inject(Object object);
 
-	void init(Properties properties);
-	List<Module> modules();
+  Services child(Module... modules);
+
+  Services child(Iterable<Module> modules);
+
+  void init(Properties properties);
+
+  List<Module> modules();
 }

@@ -31,152 +31,146 @@ import org.vas.commons.context.BootContext;
 import org.vas.inject.Services;
 
 class BootContextImpl implements BootContext {
-	
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected final Services services;
-	protected final Properties properties;
-	protected final PathHandler pathHandler;
-	protected final DeploymentInfo deploymentInfo;
-	protected final ObjectMapper objectMapper = new ObjectMapper();
-	protected final Map<String, ExchangeAttribute> headers = new HashMap<>();
-	protected final Set<ExceptionHandlerHolder> exceptionHandlerEntries = new HashSet<>();
-	protected final Deque<ConditionalHandlerHolder> conditionalHandlers = new LinkedList<>();
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	public BootContextImpl(Properties properties, PathHandler pathHandler, DeploymentInfo deploymentInfo,
-	    Services serviceContainer) { 
-		super();
-		this.properties = properties;
-		this.pathHandler = pathHandler;
-		this.deploymentInfo = deploymentInfo;
-		this.services = serviceContainer;
-	}
+  protected final Services services;
+  protected final Properties properties;
+  protected final PathHandler pathHandler;
+  protected final DeploymentInfo deploymentInfo;
+  protected final ObjectMapper objectMapper = new ObjectMapper();
+  protected final Map<String, ExchangeAttribute> headers = new HashMap<>();
+  protected final Set<ExceptionHandlerHolder> exceptionHandlerEntries = new HashSet<>();
+  protected final Deque<ConditionalHandlerHolder> conditionalHandlers = new LinkedList<>();
 
-	@Override
-	public Properties properties() {
-		return properties;
-	}
+  public BootContextImpl(Properties properties, PathHandler pathHandler, DeploymentInfo deploymentInfo,
+    Services serviceContainer) {
+    super();
+    this.properties = properties;
+    this.pathHandler = pathHandler;
+    this.deploymentInfo = deploymentInfo;
+    this.services = serviceContainer;
+  }
 
-	@Override
-	public <T> T getService(Class<T> klass) {
-		return services.get(klass);
-	}
+  @Override
+  public Properties properties() {
+    return properties;
+  }
 
-	@Override
-	public void inject(Object object) {
-		services.inject(object);
-	}
+  @Override
+  public <T> T getService(Class<T> klass) {
+    return services.get(klass);
+  }
 
-	@Override
-	public PathHandler pathHandler() {
-		return pathHandler;
-	}
+  @Override
+  public void inject(Object object) {
+    services.inject(object);
+  }
 
-	@Override
-	public void addHeader(String header, String value) {
-		addHeader(header, new ConstantExchangeAttribute(value));
-	}
-	
-	@Override
-	public void bindException(Class<? extends Throwable> exception, int status) {
-		bindException(exception, status, false);
-	}
-	
-	@Override
-	public void bindException(Class<? extends Throwable> throwable, int status, boolean flushMessage) {
-		if(flushMessage) {
-			bindException(throwable, new FlushMessageExceptionHandler(status, objectMapper));
-		}
-		else {
-			bindException(throwable, new StatusExceptionHandler(status));
-		}
-	}
-	
-	@Override
-	public void bindException(Class<? extends Throwable> throwable, HttpHandler handler) {
-	  exceptionHandlerEntries.add(new ExceptionHandlerHolder(throwable, handler));
-	}
-	
-	public void addHeader(String header, ExchangeAttribute value) {
-		headers.put(header, value);
-	}
+  @Override
+  public PathHandler pathHandler() {
+    return pathHandler;
+  }
 
-	@Override
-	public void addPredicate(int priority, Predicate predicate, HttpHandler truePredicate) {
-		if(priority < 0) {
-			throw new IllegalStateException("The priority must be > 0");
-		}
+  @Override
+  public void addHeader(String header, String value) {
+    addHeader(header, new ConstantExchangeAttribute(value));
+  }
 
-		conditionalHandlers.push(new ConditionalHandlerHolder(priority, predicate, truePredicate));
-	}
+  @Override
+  public void bindException(Class<? extends Throwable> exception, int status) {
+    bindException(exception, status, false);
+  }
 
-	@Override
-	public void addNotPredicate(int priority, Predicate predicate, HttpHandler truePredicate) {
-		addPredicate(priority, Predicates.not(predicate), truePredicate);
-	}
+  @Override
+  public void bindException(Class<? extends Throwable> throwable, int status, boolean flushMessage) {
+    if(flushMessage) {
+      bindException(throwable, new FlushMessageExceptionHandler(status, objectMapper));
+    } else {
+      bindException(throwable, new StatusExceptionHandler(status));
+    }
+  }
 
-	@Override
-	public DeploymentInfo deploymentInfo() {
-		return deploymentInfo;
-	}
+  @Override
+  public void bindException(Class<? extends Throwable> throwable, HttpHandler handler) {
+    exceptionHandlerEntries.add(new ExceptionHandlerHolder(throwable, handler));
+  }
 
-	HttpHandler rootHttpHandler() {
-		if (conditionalHandlers.isEmpty()) {
-			return pathHandler;
-		}
+  public void addHeader(String header, ExchangeAttribute value) {
+    headers.put(header, value);
+  }
 
-		/*
-		 * Build a new handler from predicates
-		 */
-		HttpHandler handler = null;
-		for (ConditionalHandlerHolder condition : sortedPredicates()) {
-			if (handler == null) {
-				handler = Handlers.predicate(condition.predicate, condition.httpHandler, pathHandler);
-			} else {
-				handler = Handlers.predicate(condition.predicate, condition.httpHandler, handler);
-			}
-		}
+  @Override
+  public void addPredicate(int priority, Predicate predicate, HttpHandler truePredicate) {
+    if(priority < 0) {
+      throw new IllegalStateException("The priority must be > 0");
+    }
 
-		for(Entry<String, ExchangeAttribute> header : this.headers.entrySet()) {
-			handler = Handlers.header(handler, header.getKey(), header.getValue());
-		}
-		
-		/*
-		 * Build exception handler if exception handler entries has been registered
-		 */
-		if(!exceptionHandlerEntries.isEmpty()) {
-			ExceptionHandler exceptionHandler = Handlers.exceptionHandler(handler);
-			for(ExceptionHandlerHolder ehe : exceptionHandlerEntries) {
-				exceptionHandler.addExceptionHandler(ehe.throwable, ehe.handler);
-			}
+    conditionalHandlers.push(new ConditionalHandlerHolder(priority, predicate, truePredicate));
+  }
 
-			handler = new HttpHandler() {
+  @Override
+  public void addNotPredicate(int priority, Predicate predicate, HttpHandler truePredicate) {
+    addPredicate(priority, Predicates.not(predicate), truePredicate);
+  }
 
-				@Override
-				public void handleRequest(HttpServerExchange exchange) throws Exception {
-					if(exchange.isInIoThread()) {
-						exchange.dispatch(this);
-						return;
-					}
+  @Override
+  public DeploymentInfo deploymentInfo() {
+    return deploymentInfo;
+  }
 
-					exceptionHandler.handleRequest(exchange);
-				}
-			};
-		}
+  HttpHandler rootHttpHandler() {
+    if(conditionalHandlers.isEmpty()) {
+      return pathHandler;
+    }
 
-		return handler;
-	}
+    /*
+     * Build a new handler from predicates
+     */
+    HttpHandler handler = null;
+    for (ConditionalHandlerHolder condition : sortedPredicates()) {
+      if(handler == null) {
+        handler = Handlers.predicate(condition.predicate, condition.httpHandler, pathHandler);
+      } else {
+        handler = Handlers.predicate(condition.predicate, condition.httpHandler, handler);
+      }
+    }
 
-	/**
-	 * Sort by priority
-	 */
-	protected List<ConditionalHandlerHolder> sortedPredicates() {
-		return conditionalHandlers
-			.stream()
-			.sorted(
-				(e, o) -> o.priority.compareTo(o.priority)
-			)
-			.collect(Collectors.toList());
+    for (Entry<String, ExchangeAttribute> header : this.headers.entrySet()) {
+      handler = Handlers.header(handler, header.getKey(), header.getValue());
+    }
+
+    /*
+     * Build exception handler if exception handler entries has been registered
+     */
+    if(!exceptionHandlerEntries.isEmpty()) {
+      ExceptionHandler exceptionHandler = Handlers.exceptionHandler(handler);
+      for (ExceptionHandlerHolder ehe : exceptionHandlerEntries) {
+        exceptionHandler.addExceptionHandler(ehe.throwable, ehe.handler);
+      }
+
+      handler = new HttpHandler() {
+
+        @Override
+        public void handleRequest(HttpServerExchange exchange) throws Exception {
+          if(exchange.isInIoThread()) {
+            exchange.dispatch(this);
+            return;
+          }
+
+          exceptionHandler.handleRequest(exchange);
+        }
+      };
+    }
+
+    return handler;
+  }
+
+  /**
+   * Sort by priority
+   */
+  protected List<ConditionalHandlerHolder> sortedPredicates() {
+    return conditionalHandlers.stream().sorted((e, o) -> o.priority.compareTo(o.priority)).collect(Collectors.toList());
   }
 }
 
@@ -185,85 +179,85 @@ class BootContextImpl implements BootContext {
  */
 class ConditionalHandlerHolder {
 
-	Integer priority;
-	Predicate predicate;
-	HttpHandler httpHandler;
+  Integer priority;
+  Predicate predicate;
+  HttpHandler httpHandler;
 
-	public ConditionalHandlerHolder(Integer priority, Predicate predicate, HttpHandler httpHandler) {
-		super();
-		this.priority = priority;
-		this.predicate = predicate;
-		this.httpHandler = httpHandler;
-	}
+  public ConditionalHandlerHolder(Integer priority, Predicate predicate, HttpHandler httpHandler) {
+    super();
+    this.priority = priority;
+    this.predicate = predicate;
+    this.httpHandler = httpHandler;
+  }
 }
 
 class ExceptionHandlerHolder {
-	
-	public final Class<? extends Throwable> throwable;
-	public final HttpHandler handler;
 
-	public ExceptionHandlerHolder(Class<? extends Throwable> throwable, HttpHandler handler) {
-	  super();
-	  this.throwable = throwable;
-	  this.handler = handler;
+  public final Class<? extends Throwable> throwable;
+  public final HttpHandler handler;
+
+  public ExceptionHandlerHolder(Class<? extends Throwable> throwable, HttpHandler handler) {
+    super();
+    this.throwable = throwable;
+    this.handler = handler;
   }
-	
-	@Override
-	public int hashCode() {
-	  return throwable.getName().hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == this) {
-			return true;
-		}
-		
-		if(obj instanceof ExceptionHandlerHolder) {
-			ExceptionHandlerHolder holder = (ExceptionHandlerHolder) obj;
-			return throwable == holder.throwable;
-		}
 
-	  return super.equals(obj);
-	}
+  @Override
+  public int hashCode() {
+    return throwable.getName().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(obj == this) {
+      return true;
+    }
+
+    if(obj instanceof ExceptionHandlerHolder) {
+      ExceptionHandlerHolder holder = (ExceptionHandlerHolder) obj;
+      return throwable == holder.throwable;
+    }
+
+    return super.equals(obj);
+  }
 }
 
 class StatusExceptionHandler implements HttpHandler {
-		
-	final int status;
-	final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	public StatusExceptionHandler(int status) {
-	  super();
-	  this.status = status;
+
+  final int status;
+  final Logger logger = LoggerFactory.getLogger(getClass());
+
+  public StatusExceptionHandler(int status) {
+    super();
+    this.status = status;
   }
 
-	@Override
-	public void handleRequest(HttpServerExchange exchange) throws Exception {
-	  Throwable throwable = exchange.getAttachment(ExceptionHandler.THROWABLE);
-	  if(logger.isErrorEnabled()) {
-	  	logger.error("HttpHandler intercept an error", throwable);
-	  }
+  @Override
+  public void handleRequest(HttpServerExchange exchange) throws Exception {
+    Throwable throwable = exchange.getAttachment(ExceptionHandler.THROWABLE);
+    if(logger.isErrorEnabled()) {
+      logger.error("HttpHandler intercept an error", throwable);
+    }
 
-		exchange.setResponseCode(status);
-	}		
+    exchange.setResponseCode(status);
+  }
 }
 
 class FlushMessageExceptionHandler extends StatusExceptionHandler {
 
-	final ObjectMapper objectMapper;
+  final ObjectMapper objectMapper;
 
-	public FlushMessageExceptionHandler(int status, ObjectMapper objectMapper) {
-	  super(status);
-	  this.objectMapper = objectMapper;
+  public FlushMessageExceptionHandler(int status, ObjectMapper objectMapper) {
+    super(status);
+    this.objectMapper = objectMapper;
   }
 
-	@Override
-	public void handleRequest(HttpServerExchange exchange) throws Exception {
-	  super.handleRequest(exchange);
-	  
-	  String message = exchange.getAttachment(ExceptionHandler.THROWABLE).getMessage();
-	  byte[] bytes = objectMapper.writeValueAsBytes(MsgBean.of(message));
-	  exchange.getResponseSender().send(ByteBuffer.wrap(bytes));
-	}
+  @Override
+  public void handleRequest(HttpServerExchange exchange) throws Exception {
+    super.handleRequest(exchange);
+
+    String message = exchange.getAttachment(ExceptionHandler.THROWABLE).getMessage();
+    byte[] bytes = objectMapper.writeValueAsBytes(MsgBean.of(message));
+    exchange.getResponseSender().send(ByteBuffer.wrap(bytes));
+  }
 }
