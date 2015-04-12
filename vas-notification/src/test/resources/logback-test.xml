@@ -7,8 +7,8 @@
     </encoder>
   </appender>
   
-  <logger name="org.ormlite" level="warn" />
-  <logger name="org.vas" level="debug" />
+  <logger name="org.j256" level="warn" />
+  <logger name="org.vas" level="trace" />
   <!-- <logger name="org.apache.wink" level="debug" /> -->
 
   <root level="warn">

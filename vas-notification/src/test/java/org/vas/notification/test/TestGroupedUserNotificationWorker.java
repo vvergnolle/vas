@@ -70,6 +70,7 @@ public class TestGroupedUserNotificationWorker extends AbstractVasRuntimeTest {
   private void createNotification(Address address) {
     Notification notification = new Notification();
     notification.hour = new Date().getHours();
+    notification.min = new Date().getMinutes();
     notification.address = address;
     notification.type = "test";
 

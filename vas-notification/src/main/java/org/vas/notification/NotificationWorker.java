@@ -42,6 +42,10 @@ public class NotificationWorker implements Runnable {
   }
 
   protected void notifyAddress(User user, Address address) {
+    if(logger.isTraceEnabled()) {
+      logger.trace("Notify address {} - {}", user.username, address.label);
+    }
+
     notificationService.listByAddress(address).forEach(notif -> doNotify(user, address, notif));
   }
 
