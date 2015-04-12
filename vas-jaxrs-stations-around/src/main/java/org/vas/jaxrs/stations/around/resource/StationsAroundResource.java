@@ -27,7 +27,7 @@ public class StationsAroundResource extends VasResource {
   @Path("{distance}")
   public Response around(@PathParam("id") int id, @PathParam("distance") int distance) {
 
-    Address address = addressService.fecth(id);
+    Address address = addressService.fetch(id);
 
     HttpResponse autolibResponse = autolibWs.geofilter(address.latitude, address.longitude, distance);
     return ok(new String(autolibResponse.bytes()));

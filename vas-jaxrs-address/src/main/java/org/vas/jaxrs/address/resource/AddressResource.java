@@ -51,7 +51,7 @@ public class AddressResource extends VasResource {
   public Response update(@FormParam("id") int id, @FormParam("label") @DefaultValue("") String label,
     @FormParam("latitude") @DefaultValue("0") float lat, @FormParam("longitude") @DefaultValue("0") float lng) {
 
-    Address address = addressService.fecth(id);
+    Address address = addressService.fetch(id);
     boolean changes = false;
 
     if(!label.isEmpty()) {

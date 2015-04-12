@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vas.commons.event.DefaultDeploymentEvent;
+import org.vas.commons.event.StartEvent;
 import org.vas.inject.Services;
 import org.vas.inject.ServicesUtil;
 
@@ -70,6 +71,8 @@ class VasImpl implements Vas {
         logger.debug("Vas started (no server)");
       }
     }
+
+    eventBus.post(new StartEvent(this));
   }
 
   private void init(PathHandler pathHandler) throws ServletException {

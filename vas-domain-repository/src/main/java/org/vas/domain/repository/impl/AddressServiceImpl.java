@@ -27,7 +27,7 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
-  public Address fecth(int id) {
+  public Address fetch(int id) {
     try {
       Address address = repository.queryForId(id);
       if(address == null) {

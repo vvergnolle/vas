@@ -14,7 +14,7 @@ public interface AddressService {
    * 
    * @throws AddressNotFoundException
    */
-  Address fecth(int id);
+  Address fetch(int id);
 
   /**
    * Create a transient address

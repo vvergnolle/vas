@@ -1,8 +1,13 @@
 package org.vas.domain.repository;
 
-import java.sql.SQLException;
-import java.util.Properties;
+import static org.vas.commons.utils.FunctionalUtils.quiet;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
+import java.util.ServiceLoader;
+
+import org.vas.commons.utils.OrderedComparator;
 import org.vas.domain.repository.exception.DomainRepositoryException;
 import org.vas.domain.repository.impl.AddressServiceImpl;
 import org.vas.domain.repository.impl.RepositoriesImpl;
@@ -10,6 +15,7 @@ import org.vas.domain.repository.impl.UserServiceImpl;
 import org.vas.domain.repository.listener.DomainRepositoryEventListener;
 import org.vas.inject.ModuleDescriptor;
 
+import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.j256.ormlite.dao.DaoManager;
@@ -32,6 +38,8 @@ public class AddressModule extends AbstractModule implements ModuleDescriptor {
       bind(Database.class).toInstance(() -> {
         TableUtils.createTable(connectionSource, User.class);
         TableUtils.createTable(connectionSource, Address.class);
+
+        createTableByDescriptors(connectionSource);
       });
 
       bind(AddressRepository.class).toInstance(
@@ -47,6 +55,13 @@ public class AddressModule extends AbstractModule implements ModuleDescriptor {
     }
 
     bind(DomainRepositoryEventListener.class).asEagerSingleton();
+  }
+
+  private void createTableByDescriptors(ConnectionSource connectionSource) {
+    List<CreateTableDescriptor> descriptors = Lists.newArrayList(ServiceLoader.load(CreateTableDescriptor.class)
+      .iterator());
+    descriptors.sort(new OrderedComparator());
+    descriptors.forEach(d -> quiet(() -> TableUtils.createTable(connectionSource, d.domain())));
   }
 
   @Override

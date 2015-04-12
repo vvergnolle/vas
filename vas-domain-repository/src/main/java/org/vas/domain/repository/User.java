@@ -68,7 +68,6 @@ public class User {
 
   public void hash() {
     password = hashPassword(password);
-    System.out.println(password);
   }
 
   public String toString() {

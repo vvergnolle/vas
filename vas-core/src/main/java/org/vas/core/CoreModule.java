@@ -3,6 +3,7 @@ package org.vas.core;
 import java.util.Properties;
 
 import org.vas.commons.messages.MessageHelper;
+import org.vas.commons.utils.ShutdownRegistry;
 import org.vas.inject.ModuleDescriptor;
 
 import com.google.common.eventbus.EventBus;
@@ -20,6 +21,7 @@ public class CoreModule extends AbstractModule implements ModuleDescriptor {
   @Override
   protected void configure() {
     bind(EventBus.class).asEagerSingleton();
+    bind(ShutdownRegistry.class).asEagerSingleton();
     bind(MessageHelper.class).toInstance(createMessageHelper());
   }
 

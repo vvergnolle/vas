@@ -47,7 +47,7 @@ public class TestJaxrsAddress extends AbstractVasRestTest {
     assertThat(response.status).as("POST address should respond with CREATED").isEqualTo(201);
     assertThat(response.content.getId()).as("The created address should have an id").isGreaterThan(0);
 
-    Address address = addressService.fecth(response.content.getId());
+    Address address = addressService.fetch(response.content.getId());
     assertThat(address).as("The created address should be retrievable").isNotNull();
     assertThat(address.id == response.content.getId()).as(
       "The retrieved address and the created address should have the same id").isTrue();
@@ -67,7 +67,7 @@ public class TestJaxrsAddress extends AbstractVasRestTest {
     assertThat(response.status).as("POST address should respond with CREATED").isEqualTo(201);
     assertThat(id).as("The created address should have an id").isGreaterThan(0);
 
-    Address address = addressService.fecth(id);
+    Address address = addressService.fetch(id);
     assertThat(address.label).as("The fetched address should have the same label than the created one")
       .isEqualTo(label);
 
@@ -79,7 +79,7 @@ public class TestJaxrsAddress extends AbstractVasRestTest {
 
     assertThat(putResponse.status).as("UPDATE address should respond with OK").isEqualTo(200);
 
-    address = addressService.fecth(id);
+    address = addressService.fetch(id);
     assertThat(address.label).as("The retrieved address should have the new label").isEqualTo(newLabel);
   }
 
@@ -100,7 +100,7 @@ public class TestJaxrsAddress extends AbstractVasRestTest {
     Response<String> deleteResponse = vasRest.withBasic("test", "test").delete("/rest/address/{0}", String.class, id);
 
     assertThat(deleteResponse.status).as("DELETE address should respond with OK").isEqualTo(200);
-    addressService.fecth(id);
+    addressService.fetch(id);
   }
 
   private Map<String, String> makeAddressMap(String label, String latitude, String longitude) {

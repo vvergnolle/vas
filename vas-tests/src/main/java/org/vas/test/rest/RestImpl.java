@@ -212,6 +212,8 @@ public class RestImpl implements Rest {
      */
     if(status == 401) {
       return Response.of(status, null, content);
+    } else if(status == 204) {
+      return Response.of(status, null, content);
     }
 
     T body = lookupBody(klass, content);

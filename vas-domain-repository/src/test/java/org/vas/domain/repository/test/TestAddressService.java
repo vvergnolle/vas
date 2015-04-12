@@ -40,7 +40,7 @@ public class TestAddressService extends AbstractAddressTest {
     addressService.save(address);
     assertThat(address.id).as("The address should have a positive id").isGreaterThan(0);
 
-    address = addressService.fecth(address.id);
+    address = addressService.fetch(address.id);
     assertThat(address.label).as("The address label should be '" + label + "'").isEqualTo(label);
   }
 
@@ -62,7 +62,7 @@ public class TestAddressService extends AbstractAddressTest {
     addressService.save(address);
     assertThat(id == address.id).as("The address id should be the same - " + id).isTrue();
 
-    address = addressService.fecth(address.id);
+    address = addressService.fetch(address.id);
     assertThat(address.label).as("The new address label should be '" + newLabel + "'").isEqualTo(newLabel);
   }
 
@@ -75,6 +75,6 @@ public class TestAddressService extends AbstractAddressTest {
     assertThat(address.id).as("The address should have a positive id").isGreaterThan(0);
 
     addressService.remove(address.id);
-    address = addressService.fecth(address.id);
+    address = addressService.fetch(address.id);
   }
 }

@@ -1,0 +1,9 @@
+- !!org.vas.domain.repository.User
+    password: test
+    username: test
+- !!org.vas.domain.repository.User
+    password: test
+    username: foo
+- !!org.vas.domain.repository.User
+    password: test
+    username: bar

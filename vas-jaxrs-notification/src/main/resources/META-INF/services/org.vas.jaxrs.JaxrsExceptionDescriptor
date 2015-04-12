@@ -1,0 +1,2 @@
+org.vas.jaxrs.notification.NotificationNotFoundExceptionDescriptor
+org.vas.jaxrs.notification.InvalidNotificationTimeExceptionDescriptor
