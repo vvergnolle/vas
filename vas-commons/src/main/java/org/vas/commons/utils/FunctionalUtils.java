@@ -1,18 +1,19 @@
 package org.vas.commons.utils;
 
+
 public class FunctionalUtils {
 
-  public interface Procedure0 {
+  public interface Procedure {
 
     void invoke() throws Exception;
   }
 
-  public interface Procedure1<T> {
+  public interface Func<T> {
 
     T invoke() throws Exception;
   }
 
-  public static void quiet(Procedure0 procedure) {
+  public static void quiet(Procedure procedure) {
     try {
       procedure.invoke();
     } catch (Exception e) {
@@ -20,7 +21,7 @@ public class FunctionalUtils {
     }
   }
 
-  public static <T> T quiet(Procedure1<T> procedure) {
+  public static <T> T quiet(Func<T> procedure) {
     try {
       return procedure.invoke();
     } catch (Exception e) {
