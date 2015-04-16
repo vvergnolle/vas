@@ -15,16 +15,11 @@ This is a school project that mean **Velib and Autolib Stations** and can be tra
 
 ### Source code
 
-The source code follows some rules that are provided by the *codequality/checkstyle.xml* file. This file is used by the checkstyle maven plugin and the rules are checked when you execute :
+The source code follows some rules that are provided by the *codequality/checkstyle.xml* file. This file is used by the checkstyle maven plugin and the rules are checked when you execute
 
-* mvn test
-* mvn checkstyle:check
+> mvn test
 
 (The plugin is bound to the *test* goal - you can override this behavior by updating the pom.xml file)
-
-If you want to generate a checkstyle report based on the source code, you can execute 
-
-> mvn checkstyle:checkstyle
 
 #####More informations about checktyle
 
