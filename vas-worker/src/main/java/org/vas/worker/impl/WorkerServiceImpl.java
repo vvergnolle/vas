@@ -32,7 +32,7 @@ public final class WorkerServiceImpl implements WorkerService, Closeable {
 
   @Override
   public void schedule(Runnable runnable, int initialDelay, int period, TimeUnit unit) {
-    executorService.scheduleAtFixedRate(runnable, initialDelay, period, unit);
+    executorService.scheduleWithFixedDelay(runnable, initialDelay, period, unit);
   }
 
   @Override

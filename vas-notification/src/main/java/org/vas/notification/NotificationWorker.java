@@ -57,7 +57,7 @@ public class NotificationWorker implements Runnable {
 
   protected void dispatch(User user, Address address, Notification notification) {
     if(logger.isTraceEnabled()) {
-      logger.trace("Dispatch notification {}", notification.id);
+      logger.trace("Dispatch notification n-{}", notification.id);
     }
 
     notifier.dispatch(user, address, notification);

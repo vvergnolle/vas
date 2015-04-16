@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vas.commons.station.LibStations;
 import org.vas.domain.repository.Address;
 import org.vas.domain.repository.User;
 import org.vas.notification.Notification;
@@ -28,7 +29,7 @@ public class CountNotificationListener implements NotificationListenerDescriptor
   }
 
   @Override
-  public void notify(User user, Address address, Notification notification, List<? super Object> stations) {
+  public void notify(User user, Address address, Notification notification, LibStations stations) {
     if(logger.isDebugEnabled()) {
       logger.debug("Notify notification {} for the user {}", notification.id, user.username);
     }

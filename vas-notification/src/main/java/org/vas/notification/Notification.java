@@ -28,7 +28,7 @@ public class Notification {
   @DatabaseField
   public int dist = 500; // Default to 500m
 
-  @DatabaseField(foreign = true, canBeNull = false)
+  @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
   public Address address;
 
   public boolean isValidTime() {

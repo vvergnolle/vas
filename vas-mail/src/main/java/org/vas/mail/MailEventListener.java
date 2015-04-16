@@ -26,6 +26,10 @@ public class MailEventListener {
 
   @Subscribe
   public void onMail(SendMailEvent event) {
+    if(logger.isTraceEnabled()) {
+      logger.trace("New mail to dispatch");
+    }
+
     dispatcher.dispatch(event.mail);
   }
 

@@ -1,0 +1,60 @@
+{
+    "hits": 6,
+    "rows": 10,
+    "stations": [
+        {
+            "stands": 19,
+            "dist": 190,
+            "available": 2,
+            "availableStands": 16,
+            "id": "20016 - PYRENEES VITRUVE",
+            "lat": 2.4044256,
+            "lng": 48.85713
+        },
+        {
+            "stands": 28,
+            "dist": 227,
+            "available": 1,
+            "availableStands": 25,
+            "id": "20048 - BAGNOLET",
+            "lat": 2.4034443,
+            "lng": 48.85978
+        },
+        {
+            "stands": 38,
+            "dist": 279,
+            "available": 2,
+            "availableStands": 36,
+            "id": "20015 - BAGNOLET-ORTEAUX",
+            "lat": 2.398472,
+            "lng": 48.857143
+        },
+        {
+            "stands": 44,
+            "dist": 334,
+            "available": 4,
+            "availableStands": 39,
+            "id": "20013 - PLACE DE LA REUNION",
+            "lat": 2.3997285,
+            "lng": 48.855354
+        },
+        {
+            "stands": 21,
+            "dist": 349,
+            "available": 0,
+            "availableStands": 18,
+            "id": "20011 - PYRÉNÉES-DAGORNO",
+            "lat": 2.4051685,
+            "lng": 48.855503
+        },
+        {
+            "stands": 28,
+            "dist": 359,
+            "available": 0,
+            "availableStands": 28,
+            "id": "20020 - PYRENEES RENOUVIER",
+            "lat": 2.4004219,
+            "lng": 48.86096
+        }
+    ]
+}

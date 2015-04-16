@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 
 public class MailWorker implements Runnable, MailDispatcher, Closeable {
 
-  private static final int MAIL_CAPACITY = 20;
+  private static final int MAIL_CAPACITY = 50;
 
   protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -85,6 +85,10 @@ public class MailWorker implements Runnable, MailDispatcher, Closeable {
   }
 
   void send(Mail mail) {
+    if(logger.isTraceEnabled()) {
+      logger.trace("New mail to send - {}", mail.subject);
+    }
+
     Email email = smtp.emptyEmail();
     email.setSubject(mail.subject);
     try {
