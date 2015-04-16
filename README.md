@@ -114,6 +114,22 @@ Define debug endpoints.
 
 Annotation driven HTTP request. (Only GET support) 
 
+**vas-notification**:
+
+Domain and tasks for users notifications.
+
+**vas-notification-mail**:
+
+Mail notification listener that push a notification via email.
+
+**vas-jaxrs-notification**:
+
+Restful crud notifications.
+
+**vas-worker**:
+
+Provide a service that allow to start async tasks.
+
 *Other projects descriptions coming soon.*
 
 ###Build & Run
