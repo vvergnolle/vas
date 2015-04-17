@@ -18,6 +18,8 @@
     <version.slf4j>1.7.6</version.slf4j>
     <version.commons-io>2.4</version.commons-io>
 
+    <version.plugin.license>2.10</version.plugin.license>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -91,6 +93,34 @@
 
   <build>
     <!-- <resources> <resource> <directory>codequality</directory> </resource> </resources> -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <versionRange>[2.0,)</versionRange>
+                    <goals>
+                      <goal>format</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -113,6 +143,25 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
         <version>2.1</version>
+      </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${version.plugin.license}</version>
+        <configuration>
+          <header>LICENSE</header>
+          <properties>
+            <email>vincent7894@gmail.com</email>
+            <owner>Vincent Vergnolle</owner>
+          </properties>
+          <useDefaultExcludes>true</useDefaultExcludes>
+          <includes>
+            <include>**/*.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/.*</exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
