@@ -27,10 +27,21 @@ public class TestStationsAround extends AbstractVasRestTest {
     assertThat(response.status).as("POST address should respond with CREATED").isEqualTo(201);
     assertThat(id).as("The created address should have an id").isGreaterThan(0);
 
-    Response<Void> stationsResponse = vasRest.withBasic("test", "test").get("/rest/stations/around/{0}/0", Void.class,
-      id);
+    Response<Void> stationsResponse = vasRest.withBasic("test", "test").get("/rest/stations/around/{0}/0/all",
+      Void.class, id);
 
     assertThat(stationsResponse.status).as("GET stations should respond with OK").isEqualTo(200);
+  }
+
+  @Test
+  public void itShouldGeoFetchStations() {
+    String lat = "45.100577";
+    String lng = "1.10105";
+
+    Response<Void> response = vasRest.withBasic("test", "test").get("/rest/stations/around/geo/{0}/{1}/0/all",
+      Void.class, lat, lng);
+
+    assertThat(response.status).as("GET stations should respond with OK").isEqualTo(200);
   }
 
   private Map<String, String> makeAddressMap(String label, String latitude, String longitude) {
