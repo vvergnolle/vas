@@ -25,6 +25,7 @@ package org.vas.worker.impl;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,13 +37,23 @@ import javax.inject.Inject;
 import org.vas.commons.utils.ShutdownRegistry;
 import org.vas.worker.WorkerService;
 
+import rx.Observable;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
+
 public final class WorkerServiceImpl implements WorkerService, Closeable {
 
   final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(6);
+  final Scheduler scheduler = Schedulers.from(executorService);
 
   @Inject
   public void init(ShutdownRegistry shutdownRegistry) {
     shutdownRegistry.add(this);
+  }
+
+  @Override
+  public <T> Observable<T> observable(Callable<T> callable) {
+    return Observable.from(executorService.submit(callable), scheduler);
   }
 
   public void start(Runnable task) {

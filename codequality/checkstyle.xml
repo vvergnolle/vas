@@ -30,7 +30,7 @@
     </module>
     <module name="PackageDeclaration" />
     <module name="ReturnCount">
-      <property name="max" value="4" />
+      <property name="max" value="6" />
       <property name="format" value="^equals|lookup*|search*|find*$" />
     </module>
     <module name="SimplifyBooleanExpression" />

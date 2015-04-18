@@ -42,7 +42,7 @@ import com.google.gson.JsonParser;
 
 public abstract class InMemoryCacheInterceptor<T extends LatLng> implements HttpResourceInterceptor {
 
-  protected final Cache<String, byte[]> cache = CacheBuilder.newBuilder().softValues().initialCapacity(50)
+  protected final Cache<String, byte[]> cache = CacheBuilder.newBuilder().softValues().initialCapacity(120)
     .expireAfterWrite(1, TimeUnit.HOURS).build();
   protected final JsonParser jsonParser = new JsonParser();
 

@@ -23,6 +23,7 @@
  */
 package org.vas.jaxrs.stations.around.resource;
 
+import static org.vas.jaxrs.Responses.noContent;
 import static org.vas.jaxrs.Responses.ok;
 
 import javax.inject.Inject;
@@ -39,13 +40,18 @@ import org.vas.http.resource.HttpResponse;
 import org.vas.jaxrs.VasResource;
 import org.vas.opendata.paris.client.AutolibOpendataParisWs;
 import org.vas.opendata.paris.client.VelibOpendataParisWs;
+import org.vas.worker.WorkerService;
+
+import rx.Observable;
 
 @Path("/")
 public class StationsAroundResource extends VasResource {
 
   private static final String FILTER_ALL = "all";
-  private static final String FILTER_VELIB = "velib";
-  private static final String FILTER_AUTOLIB = "autolib";
+  private static final String VELIB_JSON_KEY = "velib";
+  private static final String AUTOLIB_JSON_KEY = "autolib";
+  private static final String FILTER_VELIB = VELIB_JSON_KEY;
+  private static final String FILTER_AUTOLIB = AUTOLIB_JSON_KEY;
 
   @Inject
   protected VelibOpendataParisWs velibWs;
@@ -55,6 +61,9 @@ public class StationsAroundResource extends VasResource {
 
   @Inject
   protected PaginationConf paginationConf;
+
+  @Inject
+  protected WorkerService workerService;
 
   @GET
   @Path("{id}/{distance}/{filter: (all|autolib|velib)}")
@@ -84,6 +93,7 @@ public class StationsAroundResource extends VasResource {
   public Response around(@PathParam("lat") float lat, @PathParam("lng") float lng, @PathParam("distance") int distance,
     @PathParam("filter") String filter, @QueryParam("page") @DefaultValue("0") int page,
     @QueryParam("rows") @DefaultValue("20") int rows) {
+
     if(rows <= 0 || rows > paginationConf.maxRows) {
       rows = paginationConf.rows;
     }
@@ -92,14 +102,80 @@ public class StationsAroundResource extends VasResource {
     boolean velib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_VELIB.equalsIgnoreCase(filter);
     boolean autolib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_AUTOLIB.equalsIgnoreCase(filter);
 
-    HttpResponse autolibResponse = autolib ? autolibWs.geofilter(start, rows, lat, lng, distance) : null;
-    HttpResponse velibResponse = velib ? velibWs.geofilter(start, rows, lat, lng, distance) : null;
+    final int finalRows = rows;
+    Observable<HttpResponse> autolibResponse = workerService.observable(() -> autolibResponse(lat, lng, distance,
+      start, autolib, finalRows));
+    Observable<HttpResponse> velibResponse = workerService.observable(() -> velibResponse(lat, lng, distance, start,
+      velib, finalRows));
 
-    Appendable builder = joinToJson(autolibResponse, velibResponse);
+    StringBuilder builder = joinAsBuilder(autolibResponse, velibResponse);
+
+    String json = builder.toString();
+    if(json.isEmpty()) {
+      return noContent();
+    }
+
     return ok(builder.toString());
   }
 
-  private Appendable joinToJson(HttpResponse autolibResponse, HttpResponse velibResponse) {
+  /*
+   * Join responses and build the final json
+   */
+  private StringBuilder joinAsBuilder(Observable<HttpResponse> autolibResponse,
+    Observable<HttpResponse> velibResponse) {
+    return Observable
+      .concat(autolibResponse, velibResponse)
+      .onErrorReturn((e) -> {
+        if(logger.isErrorEnabled()) {
+          logger.error("Error when joining autolib and velib responses from lat & lng", e);
+        }
+
+        return HttpResponse.EMPTY;
+      })
+      .map((httpResponse) -> {
+         if(httpResponse == HttpResponse.EMPTY) {
+           return new StringBuilder();
+         }
+
+         return new StringBuilder("\"")
+           .append(httpResponse.marker())
+           .append("\": ")
+           .append(new String(httpResponse.bytes()))
+           .toString();
+      })
+      .collect(StringBuilder::new, (buffer, json) -> {
+        if(json.length() == 0) {
+          return;
+        }
+
+        if(buffer.length() == 0) {
+          buffer.append("{");
+          buffer.append(json);
+        } else {
+          buffer.append(",");
+          buffer.append(json);
+        }
+      })
+      .toBlocking()
+      .first()
+      .append("}");
+  }
+
+  private HttpResponse velibResponse(float lat, float lng, int distance, int start, boolean velib,
+    final int finalRows) {
+    HttpResponse response = velib ? velibWs.geofilter(start, finalRows, lat, lng, distance) : null;
+    response.marker(VELIB_JSON_KEY);
+    return response;
+  }
+
+  private HttpResponse autolibResponse(float lat, float lng, int distance, int start, boolean autolib,
+    final int finalRows) {
+    HttpResponse response = autolib ? autolibWs.geofilter(start, finalRows, lat, lng, distance) : null;
+    response.marker(AUTOLIB_JSON_KEY);
+    return response;
+  }
+
+  private StringBuilder joinToJson(HttpResponse autolibResponse, HttpResponse velibResponse) {
     StringBuilder builder = new StringBuilder("{");
 
     if(autolibResponse != null) {

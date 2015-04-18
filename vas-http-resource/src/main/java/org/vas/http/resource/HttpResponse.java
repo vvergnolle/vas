@@ -25,7 +25,15 @@ package org.vas.http.resource;
 
 public final class HttpResponse {
 
+  static final byte[] EMPTY_BYTES = new byte[0];
+  public static final HttpResponse EMPTY = new HttpResponse(EMPTY_BYTES);
+
   protected byte[] bytes;
+  /*
+   * Identify the response with a tag - useful when responses are joined and the
+   * callback has to recognize each of them.
+   */
+  protected String marker = "";
 
   public HttpResponse(byte[] bytes) {
     super();
@@ -38,5 +46,13 @@ public final class HttpResponse {
 
   public void clear() {
     bytes = null;
+  }
+
+  public String marker() {
+    return marker;
+  }
+
+  public void marker(String marker) {
+    this.marker = marker;
   }
 }

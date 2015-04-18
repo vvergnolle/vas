@@ -42,9 +42,10 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class AddressModule extends AbstractModule implements ModuleDescriptor {
 
@@ -53,9 +54,22 @@ public class AddressModule extends AbstractModule implements ModuleDescriptor {
   @Override
   protected void configure() {
     try {
-      ConnectionSource connectionSource = new JdbcConnectionSource(properties.getProperty("vas.db.url"),
-        properties.getProperty("vas.db.user", "vas"), properties.getProperty("vas.db.pwd", ""));
+      String jdbcUrl = properties.getProperty("vas.db.url");
 
+      ComboPooledDataSource ds = new ComboPooledDataSource();
+      ds.setUser(properties.getProperty("vas.db.user", "vas"));
+      ds.setPassword(properties.getProperty("vas.db.pwd", ""));
+      ds.setJdbcUrl(jdbcUrl);
+
+      String rawPolicy = properties.getProperty("vas.db.policy", "normal").toUpperCase();
+      DatabasePolicy policy = DefaultDatabasePolicy.NORMAL;
+      try {
+        policy = DefaultDatabasePolicy.valueOf(rawPolicy);
+      } finally {
+        policy.configure(ds);
+      }
+
+      ConnectionSource connectionSource = new DataSourceConnectionSource(ds, jdbcUrl);
       bind(ConnectionSource.class).toInstance(connectionSource);
 
       bind(Database.class).toInstance(() -> {
@@ -91,5 +105,41 @@ public class AddressModule extends AbstractModule implements ModuleDescriptor {
   public Module module(Properties properties) {
     this.properties = properties;
     return this;
+  }
+
+  interface DatabasePolicy {
+
+    void configure(ComboPooledDataSource ds);
+  }
+
+  enum DefaultDatabasePolicy implements DatabasePolicy {
+    SMALL(2, 2, 10), NORMAL(5, 3, 15), HIGH(10, 4, 40), HUGE(15, 3, 65);
+
+    int poolSize;
+    int maxStmts;
+    int aquireInc;
+    int retry = 3;
+    int retryDelay = 60;
+    int maxIdle = 60 * 60 * 2;
+    int maxAge = 60 * 60 * 24 * 2;
+
+    private DefaultDatabasePolicy(int poolSize, int aquireInc, int maxStmts) {
+      this.poolSize = poolSize;
+      this.aquireInc = aquireInc;
+      this.maxStmts = maxStmts;
+    }
+
+    @Override
+    public void configure(ComboPooledDataSource ds) {
+      ds.setMinPoolSize(poolSize);
+      ds.setInitialPoolSize(poolSize);
+      ds.setMaxPoolSize(poolSize * 3);
+      ds.setAcquireIncrement(aquireInc);
+      ds.setMaxIdleTime(maxIdle);
+      ds.setMaxConnectionAge(maxAge);
+      ds.setMaxStatementsPerConnection(maxStmts);
+      ds.setAcquireRetryAttempts(retry);
+      ds.setAcquireRetryDelay(retryDelay);
+    }
   }
 }

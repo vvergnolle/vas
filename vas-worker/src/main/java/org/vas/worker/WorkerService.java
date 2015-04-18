@@ -23,9 +23,12 @@
  */
 package org.vas.worker;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+
+import rx.Observable;
 
 public interface WorkerService {
 
@@ -34,4 +37,6 @@ public interface WorkerService {
   <T> CompletableFuture<T> start(Supplier<T> job);
 
   void schedule(Runnable runnable, int initialDelay, int period, TimeUnit unit);
+
+  <T> Observable<T> observable(Callable<T> callable);
 }
