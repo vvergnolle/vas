@@ -72,9 +72,7 @@ public abstract class VasResource {
   }
 
   protected UserBean currentUserBean() {
-    Principal principal = securityContext.getUserPrincipal();
-    UserPrincipal user = (UserPrincipal) principal;
-
-    return UserBean.of(user);
+    User user = currentUser();
+    return new UserBean(user.id, user.username, user.email, user.createdAt);
   }
 }

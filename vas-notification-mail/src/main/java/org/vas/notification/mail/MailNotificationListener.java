@@ -47,8 +47,9 @@ import com.google.inject.Inject;
 
 public class MailNotificationListener implements NotificationListener {
 
-  static final String NOTIFICATION_TPL = "mails-tpl/notification.tpl";
-  static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory(new DefaultResolver());
+  private static final String NO_REPLY = "no-reply@vas.org";
+  private static final String NOTIFICATION_TPL = "mails-tpl/notification.tpl";
+  private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory(new DefaultResolver());
 
   protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -63,7 +64,7 @@ public class MailNotificationListener implements NotificationListener {
 
   @Override
   public void notify(User user, Address address, Notification notification, LibStations stations) {
-    Mail mail = new Mail("vincent7894@gmail.com", "no-reply@vas.org", buildBody(user, address, notification, stations),
+    Mail mail = new Mail(user.email, NO_REPLY, buildBody(user, address, notification, stations),
       "Notification about stations");
 
     eventBus.post(new SendMailEvent(this, mail));

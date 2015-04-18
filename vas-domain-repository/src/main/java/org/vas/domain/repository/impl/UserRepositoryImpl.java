@@ -52,8 +52,8 @@ public class UserRepositoryImpl extends BaseDaoImpl<User, Integer> implements Us
   @Override
   public User authenticate(String username, char[] password) {
     try {
-      User user = queryBuilder().limit(1L).selectColumns(User.ID, User.USERNAME).where().eq(User.USERNAME, username)
-        .and().eq(User.PASSWORD, User.hashPassword(password)).queryForFirst();
+      User user = queryBuilder().limit(1L).selectColumns(User.ID, User.USERNAME, User.EMAIL).where()
+        .eq(User.USERNAME, username).and().eq(User.PASSWORD, User.hashPassword(password)).queryForFirst();
 
       if(user == null) {
         throw new UserNotFoundException(username);

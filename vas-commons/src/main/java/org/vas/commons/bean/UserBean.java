@@ -23,9 +23,7 @@
  */
 package org.vas.commons.bean;
 
-import java.security.Principal;
-
-import org.vas.commons.security.UserPrincipal;
+import java.util.Date;
 
 /**
  * Pojo that will give back informations on a user
@@ -33,6 +31,8 @@ import org.vas.commons.security.UserPrincipal;
 public final class UserBean {
 
   private int id;
+  private String email;
+  private Date createdAt;
   private String username;
   private long time = System.currentTimeMillis();
 
@@ -40,30 +40,12 @@ public final class UserBean {
     super();
   }
 
-  UserBean(int id, String username) {
+  public UserBean(int id, String username, String email, Date createdAt) {
     super();
     this.id = id;
+    this.email = email;
+    this.createdAt = createdAt;
     this.username = username;
-  }
-
-  UserBean(int id, Principal principal) {
-    this(id, principal.getName());
-  }
-
-  UserBean(UserPrincipal principal) {
-    this(principal.id, principal.user);
-  }
-
-  public static UserBean of(UserPrincipal principal) {
-    return new UserBean(principal);
-  }
-
-  public static UserBean of(int id, Principal principal) {
-    return new UserBean(id, principal);
-  }
-
-  public static UserBean of(int id, String username) {
-    return new UserBean(id, username);
   }
 
   public int getId() {
@@ -88,5 +70,21 @@ public final class UserBean {
 
   public void setTime(long time) {
     this.time = time;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 }

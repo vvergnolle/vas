@@ -23,6 +23,7 @@
  */
 package org.vas.domain.repository;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,8 +40,10 @@ import com.j256.ormlite.table.DatabaseTable;
 public class User {
 
   public static final String ID = "id";
+  public static final String EMAIL = "email";
   public static final String USERNAME = "username";
   public static final String PASSWORD = "password";
+  public static final String CREATED_AT = "createdAt";
 
   /**
    * Roles
@@ -80,12 +83,14 @@ public class User {
   public String username;
 
   @DatabaseField
+  public String email;
+
+  @DatabaseField
   public String password;
 
-  /**
-   * Set transient in order to prevent jackson serializer to return it in HTTP
-   * responses
-   */
+  @DatabaseField
+  public Date createdAt;
+
   @ForeignCollectionField
   public transient ForeignCollection<Address> addresses;
 

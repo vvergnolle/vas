@@ -7,7 +7,7 @@
     </encoder>
   </appender>
   
-  <logger name="org.vas" level="trace" />
+  <logger name="org.vas" level="info" />
   <logger name="org.apache.wink" level="warn" />
 
   <root level="warn">
