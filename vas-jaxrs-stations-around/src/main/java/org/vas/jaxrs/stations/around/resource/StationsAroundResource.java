@@ -26,11 +26,14 @@ package org.vas.jaxrs.stations.around.resource;
 import static org.vas.jaxrs.Responses.ok;
 
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.vas.commons.conf.PaginationConf;
 import org.vas.domain.repository.Address;
 import org.vas.http.resource.HttpResponse;
 import org.vas.jaxrs.VasResource;
@@ -50,17 +53,27 @@ public class StationsAroundResource extends VasResource {
   @Inject
   protected AutolibOpendataParisWs autolibWs;
 
+  @Inject
+  protected PaginationConf paginationConf;
+
   @GET
   @Path("{id}/{distance}/{filter: (all|autolib|velib)}")
   public Response around(@PathParam("id") int id, @PathParam("distance") int distance,
-    @PathParam("filter") String filter) {
+    @PathParam("filter") String filter, @QueryParam("page") @DefaultValue("0") int page,
+    @QueryParam("rows") @DefaultValue("20") int rows) {
     Address address = addressService.fetch(id);
+    if(rows <= 0 || rows > paginationConf.maxRows) {
+      rows = paginationConf.rows;
+    }
 
+    int start = page * rows;
     boolean velib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_VELIB.equalsIgnoreCase(filter);
     boolean autolib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_AUTOLIB.equalsIgnoreCase(filter);
 
-    HttpResponse autolibResponse = autolib ? autolibWs.geofilter(address.latitude, address.longitude, distance) : null;
-    HttpResponse velibResponse = velib ? velibWs.geofilter(address.latitude, address.longitude, distance) : null;
+    HttpResponse autolibResponse = autolib ? autolibWs.geofilter(start, rows, address.latitude, address.longitude,
+      distance) : null;
+    HttpResponse velibResponse = velib ? velibWs.geofilter(start, rows, address.latitude, address.longitude, distance)
+      : null;
 
     Appendable builder = joinToJson(autolibResponse, velibResponse);
     return ok(builder.toString());
@@ -69,12 +82,18 @@ public class StationsAroundResource extends VasResource {
   @GET
   @Path("/geo/{lat}/{lng}/{distance}/{filter: (all|autolib|velib)}")
   public Response around(@PathParam("lat") float lat, @PathParam("lng") float lng, @PathParam("distance") int distance,
-    @PathParam("filter") String filter) {
+    @PathParam("filter") String filter, @QueryParam("page") @DefaultValue("0") int page,
+    @QueryParam("rows") @DefaultValue("20") int rows) {
+    if(rows <= 0 || rows > paginationConf.maxRows) {
+      rows = paginationConf.rows;
+    }
+
+    int start = page * rows;
     boolean velib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_VELIB.equalsIgnoreCase(filter);
     boolean autolib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_AUTOLIB.equalsIgnoreCase(filter);
 
-    HttpResponse autolibResponse = autolib ? autolibWs.geofilter(lat, lng, distance) : null;
-    HttpResponse velibResponse = velib ? velibWs.geofilter(lat, lng, distance) : null;
+    HttpResponse autolibResponse = autolib ? autolibWs.geofilter(start, rows, lat, lng, distance) : null;
+    HttpResponse velibResponse = velib ? velibWs.geofilter(start, rows, lat, lng, distance) : null;
 
     Appendable builder = joinToJson(autolibResponse, velibResponse);
     return ok(builder.toString());

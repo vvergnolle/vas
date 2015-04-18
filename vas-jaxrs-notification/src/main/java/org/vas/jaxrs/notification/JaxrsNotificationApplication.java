@@ -23,16 +23,18 @@
  */
 package org.vas.jaxrs.notification;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-import org.vas.jaxrs.VasApplication;
+import javax.ws.rs.core.Application;
+
 import org.vas.jaxrs.notification.resource.NotificationResource;
 
-public class JaxrsNotificationApplication extends VasApplication {
+import com.google.common.collect.Sets;
+
+public class JaxrsNotificationApplication extends Application {
 
   @Override
-  protected List<Object> resources() {
-    return Arrays.asList(new NotificationResource());
+  public Set<Class<?>> getClasses() {
+    return Sets.newHashSet(NotificationResource.class);
   }
 }

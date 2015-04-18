@@ -21,22 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.vas.jaxrs.providers;
+package org.vas.commons.conf;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 
-/**
- * Providers that are located in the {@link SharedProviders#LIST} constant will
- * be automatically inserted as singletons in {@link VasApplication}
- * applications.
- * 
- */
-public class SharedProviders {
+public class PaginationConf {
 
-  public static List<Class<?>> CLASSES = new ArrayList<>(1);
+  public final int rows;
+  public final int maxRows;
 
-  static {
-    CLASSES.add(JaxrsExceptionProvider.class);
+  public PaginationConf(Properties properties) {
+    super();
+    rows = Integer.valueOf(properties.getProperty("vas.http.pagination.rows", "20"));
+    maxRows = Integer.valueOf(properties.getProperty("vas.http.pagination.maxRows", "50"));
   }
 }

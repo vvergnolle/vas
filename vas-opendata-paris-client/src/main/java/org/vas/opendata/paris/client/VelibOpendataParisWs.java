@@ -34,5 +34,5 @@ public interface VelibOpendataParisWs {
   HttpResponse geofilter(float lat, float lng, int distance);
 
   @HttpResource(uri = "&start=%d&rows=%d&geofilter.distance=%f,%f,%d")
-  HttpResponse geofilter(int start, int limit, float lat, float lng, int distance);
+  HttpResponse geofilter(int start, int rows, float lat, float lng, int distance);
 }

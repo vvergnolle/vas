@@ -89,6 +89,9 @@ class Notifier {
     }
   }
 
+  /**
+   * Fetch a stations from WS or get a cached version
+   */
   protected LibStations fetchLibStations(Notification notification) {
     LibStations libStations = cache.getIfPresent(notification.id);
     if(libStations == null) {

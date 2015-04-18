@@ -27,6 +27,9 @@ import static org.vas.http.resource.HttpEndpointFactory.createEndpoint;
 
 import java.util.Properties;
 
+import org.vas.http.resource.cache.EtagCache;
+import org.vas.http.resource.cache.EtagCache.EtagCachePolicy;
+import org.vas.http.resource.cache.impl.EtagCacheImpl;
 import org.vas.inject.ModuleDescriptor;
 import org.vas.opendata.paris.client.AutolibOpendataParisWs;
 import org.vas.opendata.paris.client.VelibOpendataParisWs;
@@ -38,16 +41,20 @@ import com.google.inject.Module;
 
 public class OpendataParisProxyModule extends AbstractModule implements ModuleDescriptor {
 
+  private Properties properties;
+
   @Override
   protected void configure() {
     bind(VelibOpendataParisWs.class)
       .toInstance(createEndpoint(VelibOpendataParisWs.class, new VelibCacheInterceptor()));
     bind(AutolibOpendataParisWs.class).toInstance(
       createEndpoint(AutolibOpendataParisWs.class, new AutolibCacheInterceptor()));
+    bind(EtagCache.class).toInstance(new EtagCacheImpl(new EtagCachePolicy(properties)));
   }
 
   @Override
   public Module module(Properties properties) {
+    this.properties = properties;
     return this;
   }
 }

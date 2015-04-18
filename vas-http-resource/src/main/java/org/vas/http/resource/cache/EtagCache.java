@@ -21,38 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.vas.jaxrs;
+package org.vas.http.resource.cache;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.core.Application;
+public interface EtagCache {
 
-import org.vas.inject.Services;
-import org.vas.inject.ServicesUtil;
-import org.vas.jaxrs.providers.SharedProviders;
+  public static class EtagCachePolicy {
 
-public abstract class VasApplication extends Application {
+    public final int duration;
+    public final TimeUnit timeUnit;
 
-  protected final Set<Object> singletons = new HashSet<>();
+    public EtagCachePolicy(Properties properties) {
+      super();
+      duration = Integer.valueOf(properties.getProperty("vas.http.etag.cache.duration", "1"));
+      timeUnit = TimeUnit.valueOf(properties.getProperty("vas.http.etag.cache.timeUnit", "hours").toUpperCase());
+    }
 
-  {
-    Services container = ServicesUtil.defaultContainer();
-    resources().forEach((resource) -> {
-      container.inject(resource);
-      singletons.add(resource);
-    });
-
-    for (Class<?> klass : SharedProviders.CLASSES) {
-      singletons.add(container.get(klass));
+    public long toSeconds() {
+      return timeUnit.toSeconds(duration);
     }
   }
 
-  protected abstract List<Object> resources();
+  EtagCachePolicy cachePolicy();
 
-  @Override
-  public Set<Object> getSingletons() {
-    return singletons;
-  }
+  /**
+   * ETag for this uri
+   */
+  String get(String uri);
+
+  /**
+   * Call get first and if call the return of refresh
+   * 
+   * @see EtagCache#get(String)
+   * @see EtagCache#refresh(String)
+   */
+  String getOrCreate(String uri);
+
+  /**
+   * Check if the passed etag equals to the cached etag for this uri
+   */
+  boolean matches(String etag, String uri);
+
+  /**
+   * Refresh the ETag for this uri
+   * 
+   * @return the generated etag
+   */
+  String refresh(String uri);
 }

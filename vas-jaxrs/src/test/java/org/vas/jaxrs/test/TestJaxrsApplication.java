@@ -23,16 +23,18 @@
  */
 package org.vas.jaxrs.test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-import org.vas.jaxrs.VasApplication;
+import javax.ws.rs.core.Application;
+
 import org.vas.jaxrs.test.resource.FooBarResource;
 
-public class TestJaxrsApplication extends VasApplication {
+import com.google.common.collect.Sets;
+
+public class TestJaxrsApplication extends Application {
 
   @Override
-  protected List<Object> resources() {
-    return Arrays.asList(new FooBarResource());
+  public Set<Class<?>> getClasses() {
+    return Sets.newHashSet(FooBarResource.class);
   }
 }

@@ -23,16 +23,18 @@
  */
 package org.vas.jaxrs.address;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-import org.vas.jaxrs.VasApplication;
+import javax.ws.rs.core.Application;
+
 import org.vas.jaxrs.address.resource.AddressResource;
 
-public class AddressApplication extends VasApplication {
+import com.google.common.collect.Sets;
+
+public class AddressApplication extends Application {
 
   @Override
-  protected List<Object> resources() {
-    return Arrays.asList(new AddressResource());
+  public Set<Class<?>> getClasses() {
+    return Sets.newHashSet(AddressResource.class);
   }
 }

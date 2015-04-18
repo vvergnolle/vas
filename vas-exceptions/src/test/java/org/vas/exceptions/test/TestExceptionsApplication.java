@@ -23,16 +23,18 @@
  */
 package org.vas.exceptions.test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 import org.vas.exceptions.test.resources.NopResource;
-import org.vas.jaxrs.VasApplication;
 
-public class TestExceptionsApplication extends VasApplication {
+import com.google.common.collect.Sets;
+
+public class TestExceptionsApplication extends Application {
 
   @Override
-  protected List<Object> resources() {
-    return Arrays.asList(new NopResource());
+  public Set<Class<?>> getClasses() {
+    return Sets.newHashSet(NopResource.class);
   }
 }

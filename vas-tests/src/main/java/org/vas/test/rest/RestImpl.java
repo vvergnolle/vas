@@ -39,20 +39,18 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vas.commons.bean.MsgBean;
+import org.vas.commons.utils.GsonUtils;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonSyntaxException;
 
 public class RestImpl implements Rest {
 
   private static final int TIMEOUT = 4000;
   private static final String USER_AGENT = "Vas-Rest-Agent";
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   protected final Logger logger = LoggerFactory.getLogger(getClass());
   protected final Map<String, String> defaultHeaders;
@@ -168,8 +166,8 @@ public class RestImpl implements Rest {
       return null;
     } else {
       try {
-        return OBJECT_MAPPER.readValue(content, klass);
-      } catch (JsonParseException | JsonMappingException e) {
+        return GsonUtils.GSON.fromJson(new String(content), klass);
+      } catch (JsonSyntaxException e) {
         if(logger.isWarnEnabled()) {
           logger.warn("Fail to parse json", e);
         }
@@ -242,9 +240,9 @@ public class RestImpl implements Rest {
     T body = lookupBody(klass, content);
     if(body == null) {
       try {
-        MsgBean msg = OBJECT_MAPPER.readValue(content, MsgBean.class);
+        MsgBean msg = GsonUtils.GSON.fromJson(new String(content), MsgBean.class);
         return Response.of(status, body, content, msg);
-      } catch (Exception e) {
+      } catch (JsonSyntaxException e) {
         logger.warn("Fail to fallback on a MsgBean body", e);
       }
     }

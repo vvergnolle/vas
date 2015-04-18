@@ -21,22 +21,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.vas.jaxrs.providers;
+package org.vas.http.resource.cache.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.vas.http.resource.cache.EtagCache;
 
-/**
- * Providers that are located in the {@link SharedProviders#LIST} constant will
- * be automatically inserted as singletons in {@link VasApplication}
- * applications.
- * 
- */
-public class SharedProviders {
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
-  public static List<Class<?>> CLASSES = new ArrayList<>(1);
+public class EtagCacheImpl implements EtagCache {
 
-  static {
-    CLASSES.add(JaxrsExceptionProvider.class);
+  private final EtagCachePolicy policy;
+  private final Cache<String, String> cache;
+
+  public EtagCacheImpl(EtagCachePolicy policy) {
+    super();
+    this.policy = policy;
+    this.cache = CacheBuilder.newBuilder().softValues().expireAfterWrite(policy.duration, policy.timeUnit).build();
+  }
+
+  @Override
+  public EtagCachePolicy cachePolicy() {
+    return policy;
+  }
+
+  @Override
+  public String get(String uri) {
+    return cache.getIfPresent(uri);
+  }
+
+  @Override
+  public String getOrCreate(String uri) {
+    String etag = get(uri);
+    if(etag == null) {
+      etag = refresh(uri);
+    }
+
+    return etag;
+  }
+
+  @Override
+  public boolean matches(String etag, String uri) {
+    if(etag == null) {
+      return false;
+    }
+
+    return etag.equals(get(uri));
+  }
+
+  @Override
+  public String refresh(String uri) {
+    String etag = String.valueOf(System.nanoTime());
+    cache.put(uri, etag);
+
+    return etag;
   }
 }

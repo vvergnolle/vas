@@ -46,8 +46,8 @@ public class RestHttpHandlerPostProcessor implements HttpHandlerPostProcessor {
   }
 
   protected ServletInfo toServletInfo(JaxrsDescriptor descriptor) {
-    return Servlets.servlet(descriptor.id(), RestServlet.class).addMappings(descriptor.mapping()).setLoadOnStartup(1)
-      .addInitParam(RestServlet.APPLICATION_INIT_PARAM, descriptor.applicationClass().getName())
+    return Servlets.servlet(descriptor.id(), VasRestServlet.class).addMappings(descriptor.mapping())
+      .setLoadOnStartup(1).addInitParam(RestServlet.APPLICATION_INIT_PARAM, descriptor.applicationClass().getName())
       .addInitParam("requestProcessorAttribute", descriptor.id());
   }
 }

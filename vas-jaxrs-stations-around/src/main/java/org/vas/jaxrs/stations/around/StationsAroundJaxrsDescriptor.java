@@ -29,6 +29,8 @@ import org.vas.jaxrs.JaxrsDescriptor;
 
 public class StationsAroundJaxrsDescriptor implements JaxrsDescriptor {
 
+  public static final String MAPPING = "/rest/stations/around/*";
+
   @Override
   public String id() {
     return "stations-around";
@@ -36,7 +38,7 @@ public class StationsAroundJaxrsDescriptor implements JaxrsDescriptor {
 
   @Override
   public String mapping() {
-    return "/rest/stations/around/*";
+    return MAPPING;
   }
 
   @Override

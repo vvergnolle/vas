@@ -25,6 +25,7 @@ package org.vas.jaxrs;
 
 import java.util.Properties;
 
+import org.vas.commons.conf.PaginationConf;
 import org.vas.inject.ModuleDescriptor;
 import org.vas.jaxrs.providers.JaxrsExceptionProvider;
 
@@ -33,13 +34,17 @@ import com.google.inject.Module;
 
 public class JaxrsModule extends AbstractModule implements ModuleDescriptor {
 
+  private Properties properties;
+
   @Override
   protected void configure() {
     bind(JaxrsExceptionProvider.class);
+    bind(PaginationConf.class).toInstance(new PaginationConf(properties));
   }
 
   @Override
   public Module module(Properties properties) {
+    this.properties = properties;
     return this;
   }
 }
