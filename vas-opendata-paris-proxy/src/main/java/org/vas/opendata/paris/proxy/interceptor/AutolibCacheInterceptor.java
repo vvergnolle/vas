@@ -38,11 +38,18 @@ public class AutolibCacheInterceptor extends InMemoryCacheInterceptor<Autolib> {
     Autolib autolib = new Autolib();
 
     JsonArray coordinates = object.getAsJsonObject("geometry").getAsJsonArray("coordinates");
-    autolib.setLat(coordinates.get(0).getAsFloat());
-    autolib.setLng(coordinates.get(1).getAsFloat());
+    autolib.setLng(coordinates.get(0).getAsFloat());
+    autolib.setLat(coordinates.get(1).getAsFloat());
 
     JsonObject fields = object.getAsJsonObject("fields");
     autolib.setId(fields.getAsJsonPrimitive("identifiant_autolib").getAsString());
+    // Extract address parts
+    String street = fields.getAsJsonPrimitive("rue").getAsString();
+    String postalCode = fields.getAsJsonPrimitive("code_postal").getAsString();
+    String city = fields.getAsJsonPrimitive("ville").getAsString();
+    // Set address
+    autolib.setAddress(street + ", " + postalCode + " " + city);
+
     autolib.setTiers(fields.getAsJsonPrimitive("tiers").getAsInt());
     autolib.setAbri(fields.getAsJsonPrimitive("abri").getAsInt());
     autolib.setAutolib(fields.getAsJsonPrimitive("autolib").getAsInt());

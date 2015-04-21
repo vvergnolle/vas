@@ -133,7 +133,7 @@ public class StationsAroundResource extends VasResource {
         return HttpResponse.EMPTY;
       })
       .map((httpResponse) -> {
-         if(httpResponse == HttpResponse.EMPTY) {
+         if(httpResponse == HttpResponse.EMPTY || httpResponse == null) {
            return new StringBuilder();
          }
 
@@ -164,14 +164,18 @@ public class StationsAroundResource extends VasResource {
   private HttpResponse velibResponse(float lat, float lng, int distance, int start, boolean velib,
     final int finalRows) {
     HttpResponse response = velib ? velibWs.geofilter(start, finalRows, lat, lng, distance) : null;
-    response.marker(VELIB_JSON_KEY);
+    if(response != null) {
+      response.marker(VELIB_JSON_KEY);
+    }
     return response;
   }
 
   private HttpResponse autolibResponse(float lat, float lng, int distance, int start, boolean autolib,
     final int finalRows) {
     HttpResponse response = autolib ? autolibWs.geofilter(start, finalRows, lat, lng, distance) : null;
-    response.marker(AUTOLIB_JSON_KEY);
+    if(response != null) {
+      response.marker(AUTOLIB_JSON_KEY);
+    }
     return response;
   }
 
@@ -179,7 +183,7 @@ public class StationsAroundResource extends VasResource {
     StringBuilder builder = new StringBuilder("{");
 
     if(autolibResponse != null) {
-      builder.append("\"autolibs\": ");
+      builder.append("\"autolib\": ");
       builder.append(new String(autolibResponse.bytes()));
     }
 
@@ -188,7 +192,7 @@ public class StationsAroundResource extends VasResource {
         builder.append(",");
       }
 
-      builder.append("\"velibs\": ");
+      builder.append("\"velib\": ");
       builder.append(new String(velibResponse.bytes()));
     }
 

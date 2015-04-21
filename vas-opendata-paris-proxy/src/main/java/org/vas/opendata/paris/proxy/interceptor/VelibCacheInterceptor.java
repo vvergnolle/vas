@@ -38,11 +38,12 @@ public class VelibCacheInterceptor extends InMemoryCacheInterceptor<Velib> {
     Velib velib = new Velib();
 
     JsonArray coordinates = object.getAsJsonObject("geometry").getAsJsonArray("coordinates");
-    velib.setLat(coordinates.get(0).getAsFloat());
-    velib.setLng(coordinates.get(1).getAsFloat());
+    velib.setLng(coordinates.get(0).getAsFloat());
+    velib.setLat(coordinates.get(1).getAsFloat());
 
     JsonObject fields = object.getAsJsonObject("fields");
     velib.setId(fields.getAsJsonPrimitive("name").getAsString());
+    velib.setAddress(fields.getAsJsonPrimitive("address").getAsString());
     velib.setDist(fields.getAsJsonPrimitive("dist").getAsInt());
     velib.setAvailable(fields.getAsJsonPrimitive("available_bikes").getAsInt());
     velib.setAvailableStands(fields.getAsJsonPrimitive("available_bike_stands").getAsInt());

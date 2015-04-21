@@ -28,6 +28,7 @@ public class LatLng {
   private String id;
   private float lat;
   private float lng;
+  private String address;
 
   public String getId() {
     return id;
@@ -51,5 +52,13 @@ public class LatLng {
 
   public void setLng(float lng) {
     this.lng = lng;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
   }
 }
