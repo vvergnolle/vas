@@ -32,7 +32,7 @@ public class PaginationConf {
 
   public PaginationConf(Properties properties) {
     super();
-    rows = Integer.valueOf(properties.getProperty("vas.http.pagination.rows", "20"));
+    rows = Integer.valueOf(properties.getProperty("vas.http.pagination.rows", "30"));
     maxRows = Integer.valueOf(properties.getProperty("vas.http.pagination.maxRows", "50"));
   }
 }

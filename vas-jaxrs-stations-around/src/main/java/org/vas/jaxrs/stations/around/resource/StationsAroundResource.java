@@ -79,12 +79,19 @@ public class StationsAroundResource extends VasResource {
     boolean velib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_VELIB.equalsIgnoreCase(filter);
     boolean autolib = FILTER_ALL.equalsIgnoreCase(filter) || FILTER_AUTOLIB.equalsIgnoreCase(filter);
 
-    HttpResponse autolibResponse = autolib ? autolibWs.geofilter(start, rows, address.latitude, address.longitude,
-      distance) : null;
-    HttpResponse velibResponse = velib ? velibWs.geofilter(start, rows, address.latitude, address.longitude, distance)
-      : null;
+    final int finalRows = rows;
+    Observable<HttpResponse> autolibResponse = workerService.observable(() -> autolibResponse(address.latitude,
+      address.longitude, distance, start, autolib, finalRows));
+    Observable<HttpResponse> velibResponse = workerService.observable(() -> velibResponse(address.latitude,
+      address.longitude, distance, start, velib, finalRows));
 
-    Appendable builder = joinToJson(autolibResponse, velibResponse);
+    StringBuilder builder = joinAsBuilder(autolibResponse, velibResponse);
+
+    String json = builder.toString();
+    if(json.isEmpty()) {
+      return noContent();
+    }
+
     return ok(builder.toString());
   }
 
@@ -121,8 +128,7 @@ public class StationsAroundResource extends VasResource {
   /*
    * Join responses and build the final json
    */
-  private StringBuilder joinAsBuilder(Observable<HttpResponse> autolibResponse,
-    Observable<HttpResponse> velibResponse) {
+  private StringBuilder joinAsBuilder(Observable<HttpResponse> autolibResponse, Observable<HttpResponse> velibResponse) {
     return Observable
       .concat(autolibResponse, velibResponse)
       .onErrorReturn((e) -> {
@@ -132,18 +138,15 @@ public class StationsAroundResource extends VasResource {
 
         return HttpResponse.EMPTY;
       })
-      .map((httpResponse) -> {
-         if(httpResponse == HttpResponse.EMPTY || httpResponse == null) {
-           return new StringBuilder();
-         }
+      .map(
+        (httpResponse) -> {
+          if(httpResponse == HttpResponse.EMPTY || httpResponse == null) {
+            return new StringBuilder();
+          }
 
-         return new StringBuilder("\"")
-           .append(httpResponse.marker())
-           .append("\": ")
-           .append(new String(httpResponse.bytes()))
-           .toString();
-      })
-      .collect(StringBuilder::new, (buffer, json) -> {
+          return new StringBuilder("\"").append(httpResponse.marker()).append("\": ")
+            .append(new String(httpResponse.bytes())).toString();
+        }).collect(StringBuilder::new, (buffer, json) -> {
         if(json.length() == 0) {
           return;
         }
@@ -155,14 +158,10 @@ public class StationsAroundResource extends VasResource {
           buffer.append(",");
           buffer.append(json);
         }
-      })
-      .toBlocking()
-      .first()
-      .append("}");
+      }).toBlocking().first().append("}");
   }
 
-  private HttpResponse velibResponse(float lat, float lng, int distance, int start, boolean velib,
-    final int finalRows) {
+  private HttpResponse velibResponse(float lat, float lng, int distance, int start, boolean velib, final int finalRows) {
     HttpResponse response = velib ? velibWs.geofilter(start, finalRows, lat, lng, distance) : null;
     if(response != null) {
       response.marker(VELIB_JSON_KEY);
