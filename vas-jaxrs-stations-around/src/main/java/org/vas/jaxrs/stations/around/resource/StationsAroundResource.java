@@ -97,9 +97,9 @@ public class StationsAroundResource extends VasResource {
 
   @GET
   @Path("/geo/{lat}/{lng}/{distance}/{filter: (all|autolib|velib)}")
-  public Response around(@PathParam("lat") float lat, @PathParam("lng") float lng, @PathParam("distance") int distance,
-    @PathParam("filter") String filter, @QueryParam("page") @DefaultValue("0") int page,
-    @QueryParam("rows") @DefaultValue("20") int rows) {
+  public Response around(@PathParam("lat") float lat, @PathParam("lng") float lng,
+    @PathParam("distance") int distance, @PathParam("filter") String filter,
+    @QueryParam("page") @DefaultValue("0") int page, @QueryParam("rows") @DefaultValue("20") int rows) {
 
     if(rows <= 0 || rows > paginationConf.maxRows) {
       rows = paginationConf.rows;
@@ -128,7 +128,8 @@ public class StationsAroundResource extends VasResource {
   /*
    * Join responses and build the final json
    */
-  private StringBuilder joinAsBuilder(Observable<HttpResponse> autolibResponse, Observable<HttpResponse> velibResponse) {
+  private StringBuilder joinAsBuilder(Observable<HttpResponse> autolibResponse,
+    Observable<HttpResponse> velibResponse) {
     return Observable
       .concat(autolibResponse, velibResponse)
       .onErrorReturn((e) -> {
@@ -161,7 +162,8 @@ public class StationsAroundResource extends VasResource {
       }).toBlocking().first().append("}");
   }
 
-  private HttpResponse velibResponse(float lat, float lng, int distance, int start, boolean velib, final int finalRows) {
+  private HttpResponse velibResponse(float lat, float lng, int distance, int start, boolean velib,
+    final int finalRows) {
     HttpResponse response = velib ? velibWs.geofilter(start, finalRows, lat, lng, distance) : null;
     if(response != null) {
       response.marker(VELIB_JSON_KEY);
@@ -176,25 +178,5 @@ public class StationsAroundResource extends VasResource {
       response.marker(AUTOLIB_JSON_KEY);
     }
     return response;
-  }
-
-  private StringBuilder joinToJson(HttpResponse autolibResponse, HttpResponse velibResponse) {
-    StringBuilder builder = new StringBuilder("{");
-
-    if(autolibResponse != null) {
-      builder.append("\"autolib\": ");
-      builder.append(new String(autolibResponse.bytes()));
-    }
-
-    if(velibResponse != null) {
-      if(autolibResponse != null) {
-        builder.append(",");
-      }
-
-      builder.append("\"velib\": ");
-      builder.append(new String(velibResponse.bytes()));
-    }
-
-    return builder.append("}");
   }
 }
